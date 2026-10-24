@@ -1,0 +1,262 @@
+@import 'tailwindcss';
+@config '../../tailwind.config.mjs';
+
+/*
+ * Tokens de marca: Manual de Identidad Visual & UI Kit V1.0.
+ * Regla 60/30/10: 60% fondo (navy en oscuro, ivory en claro), 30% turquesa y pizarra,
+ * 10% naranja, reservado para CTA de conversión y alertas clave.
+ *
+ * tests/contrast.test.ts lee este archivo: si cambias un valor, corre `npm test`.
+ */
+:root {
+  /* Paleta oficial */
+  --yolotl-navy: #0d1f38;
+  --yolotl-navy-surface: #132a4a;
+  --yolotl-teal: #19a796;
+  --yolotl-teal-hover: #148a7b;
+  --yolotl-orange: #e96e24;
+  --yolotl-orange-hover: #d15b15;
+  --yolotl-ivory: #f5f3ee;
+  --yolotl-slate: #64748b;
+
+  /*
+   * Variantes de pizarra para texto. No son colores nuevos: es la misma pizarra mezclada
+   * con navy o con ivory. #64748B da 4.29:1 sobre ivory y 3.47:1 sobre navy, por debajo de AA.
+   */
+  --yolotl-slate-dark: #5c6c84; /* 91% pizarra + 9% navy  -> 4.81:1 sobre ivory */
+  --yolotl-slate-light: #8b96a6; /* 73% pizarra + 27% ivory -> 4.81:1 sobre navy-surface */
+
+  /* Tipografía */
+  --font-heading: 'Plus Jakarta Sans', Montserrat, sans-serif;
+  --font-sans: 'Inter', 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --logo-letter-spacing: 0.08em;
+
+  /* Espaciado (escala de 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --gutter: 1rem; /* 16px de margen lateral en celular */
+  --container-max: 72rem;
+
+  /* Radios */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+
+  /* Logo: área de respeto = altura de la "o" del wordmark.
+     TODO: calibrar contra el SVG oficial (aprox. 0.35 de la altura del logo completo). */
+  --logo-clearspace-ratio: 0.35;
+  --logo-min-width: 110px;
+}
+
+/*
+ * Tokens semánticos. Tema oscuro (predeterminado).
+ * Cada par texto/fondo de aquí se verifica en tests/contrast.test.ts.
+ */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: var(--yolotl-navy);
+  --color-surface: var(--yolotl-navy-surface);
+  --color-text: var(--yolotl-ivory);
+  --color-text-muted: var(--yolotl-slate-light);
+  --color-accent: var(--yolotl-teal); /* enlaces y texto de acento, cualquier tamaño */
+  --color-accent-large: var(--yolotl-teal); /* acento solo en texto grande o iconos */
+  --color-focus: var(--yolotl-teal);
+  --color-border: var(--yolotl-slate);
+  --color-border-accent: var(--yolotl-teal);
+  --color-cta-bg: var(--yolotl-orange);
+  --color-cta-bg-hover: var(--yolotl-orange-hover);
+  --color-cta-text: var(--yolotl-navy);
+  --color-error: var(--yolotl-orange);
+}
+
+/*
+ * Tema claro. Turquesa (2.70:1) y naranja (2.82:1) no llegan ni a 3:1 sobre ivory,
+ * así que aquí no se usan como texto: los enlaces van en navy con subrayado turquesa,
+ * y el acento grande y el foco usan teal-hover (3.82:1).
+ */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --color-bg: var(--yolotl-ivory);
+  --color-surface: var(--yolotl-ivory);
+  --color-text: var(--yolotl-navy);
+  --color-text-muted: var(--yolotl-slate-dark);
+  --color-accent: var(--yolotl-navy);
+  --color-accent-large: var(--yolotl-teal-hover);
+  --color-focus: var(--yolotl-teal-hover);
+  --color-border: var(--yolotl-slate);
+  --color-border-accent: var(--yolotl-teal-hover);
+  --color-cta-bg: var(--yolotl-orange);
+  --color-cta-bg-hover: var(--yolotl-orange-hover);
+  --color-cta-text: var(--yolotl-navy);
+  --color-error: var(--yolotl-navy);
+}
+
+/* Sin JavaScript (o sin data-theme), se respeta la preferencia del sistema. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --color-bg: var(--yolotl-ivory);
+    --color-surface: var(--yolotl-ivory);
+    --color-text: var(--yolotl-navy);
+    --color-text-muted: var(--yolotl-slate-dark);
+    --color-accent: var(--yolotl-navy);
+    --color-accent-large: var(--yolotl-teal-hover);
+    --color-focus: var(--yolotl-teal-hover);
+    --color-border: var(--yolotl-slate);
+    --color-border-accent: var(--yolotl-teal-hover);
+    --color-cta-bg: var(--yolotl-orange);
+    --color-cta-bg-hover: var(--yolotl-orange-hover);
+    --color-cta-text: var(--yolotl-navy);
+    --color-error: var(--yolotl-navy);
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  h2,
+  h3 {
+    font-weight: 700;
+  }
+
+  code,
+  kbd,
+  pre {
+    font-family: var(--font-mono);
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-border-accent);
+    text-underline-offset: 0.2em;
+  }
+
+  /* Foco visible en turquesa en todos los elementos interactivos. */
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .container-site {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  @media (min-width: 768px) {
+    .container-site {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  /* Precios y tablas: cifras tabulares. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /*
+   * CTA de conversión (naranja). El texto es navy, nunca blanco.
+   * Navy sobre orange-hover da 4.11:1, así que el texto va en 19px y negrita
+   * para contar como texto grande (umbral AA de 3:1).
+   */
+  .btn-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 3rem;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-md);
+    background-color: var(--color-cta-bg);
+    color: var(--color-cta-text);
+    font-family: var(--font-sans);
+    font-size: 1.1875rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 150ms ease;
+  }
+
+  .btn-cta:hover {
+    background-color: var(--color-cta-bg-hover);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: var(--space-3) var(--space-6);
+    border: 2px solid var(--color-border-accent);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 150ms ease;
+  }
+
+  .btn-secondary:hover {
+    text-decoration: underline;
+  }
+
+  .card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background-color: var(--color-surface);
+    padding: var(--space-6);
+  }
+
+  .todo {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+}

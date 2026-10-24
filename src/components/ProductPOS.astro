@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import ventaImg from '@/assets/placeholders/pos-punto-de-venta.png';
+import inventarioImg from '@/assets/placeholders/pos-inventario.png';
+import iaImg from '@/assets/placeholders/pos-ia.png';
+
+interface Props {
+  /** compact: resumen para la página de inicio, sin capturas ni precio. */
+  compact?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { compact = false, headingLevel: Heading = 'h2' } = Astro.props;
+
+const modules = [
+  {
+    title: 'Punto de venta',
+    description:
+      'TODO: cobro de refacciones y mano de obra, tickets, cortes de caja y métodos de pago.',
+    image: ventaImg,
+    alt: 'Marcador: captura de la pantalla de cobro del POS, pendiente de imagen real',
+  },
+  {
+    title: 'Inventario',
+    description: 'TODO: control de refacciones, existencias mínimas, proveedores y entradas.',
+    image: inventarioImg,
+    alt: 'Marcador: captura del módulo de inventario de refacciones, pendiente de imagen real',
+  },
+  {
+    title: 'Asistente con IA',
+    description:
+      'TODO: sugerencias de compra, diagnóstico asistido y respuestas sobre ventas del taller.',
+    image: iaImg,
+    alt: 'Marcador: captura del asistente con inteligencia artificial, pendiente de imagen real',
+  },
+];
+---
+
+<div class="grid gap-6 md:grid-cols-3">
+  {modules.map((module) => (
+    <article class="card flex flex-col">
+      {!compact && (
+        <Image
+          src={module.image}
+          alt={module.alt}
+          widths={[400, 800]}
+          sizes="(min-width: 768px) 33vw, 100vw"
+          class="mb-4 rounded-md"
+        />
+      )}
+      <Heading class="text-xl">{module.title}</Heading>
+      <p class="mt-2 text-muted">{module.description}</p>
+    </article>
+  ))}
+</div>
+
+{!compact && (
+  <section class="card mt-8 md:flex md:items-center md:justify-between" aria-labelledby="precio">
+    <div>
+      <h2 id="precio" class="text-2xl">
+        Precio
+      </h2>
+      <p class="tabular mt-2 text-3xl font-semibold">
+        $<span class="todo">TODO</span> MXN <span class="text-base text-muted">/ mes</span>
+      </p>
+      <p class="mt-1 text-sm text-muted">TODO: confirmar precio, IVA y plan de pagos.</p>
+    </div>
+    <a href="/contacto" class="btn-cta mt-6 md:mt-0">
+      Pide una demo
+    </a>
+  </section>
+)}

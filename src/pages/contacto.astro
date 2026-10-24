@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ContactForm from '@/components/ContactForm.astro';
+import { PAGES } from '@/lib/seo';
+import { SITE, isConfigured, whatsappUrl } from '@/lib/site';
+
+const wa = whatsappUrl();
+---
+
+<BaseLayout page="contacto">
+  <div class="container-site grid gap-12 py-16 md:grid-cols-2">
+    <div>
+      <h1 class="text-4xl md:text-5xl">{PAGES.contacto.title}</h1>
+      <p class="mt-6 text-lg text-muted">
+        TODO: texto que invite a pedir una demo o cotizar un proyecto.
+      </p>
+      <dl class="mt-8 space-y-4">
+        <div>
+          <dt class="font-semibold">Ciudad</dt>
+          <dd class="text-muted">{SITE.city}</dd>
+        </div>
+        <div>
+          <dt class="font-semibold">Correo</dt>
+          <dd class="text-muted">
+            {isConfigured(SITE.email) ? (
+              <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+            ) : (
+              <span class="todo">TODO</span>
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt class="font-semibold">WhatsApp</dt>
+          <dd class="text-muted">
+            {wa ? (
+              <a href={wa} target="_blank" rel="noopener noreferrer">
+                Escríbenos por WhatsApp
+              </a>
+            ) : (
+              <span class="todo">TODO</span>
+            )}
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div id="formulario">
+      <h2 class="sr-only">Formulario de contacto</h2>
+      <ContactForm />
+    </div>
+  </div>
+</BaseLayout>

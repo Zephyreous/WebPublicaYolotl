@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  cta?: { href: string; label: string };
+  secondary?: { href: string; label: string };
+}
+
+const { title, subtitle, cta, secondary } = Astro.props;
+---
+
+<section class="border-b border-border">
+  <div class="container-site py-16 md:py-24">
+    <h1 class="max-w-3xl text-4xl md:text-6xl">{title}</h1>
+    <p class="mt-6 max-w-2xl text-lg text-muted">{subtitle}</p>
+    {(cta || secondary) && (
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        {cta && (
+          <a href={cta.href} class="btn-cta">
+            {cta.label}
+          </a>
+        )}
+        {secondary && (
+          <a href={secondary.href} class="btn-secondary">
+            {secondary.label}
+          </a>
+        )}
+      </div>
+    )}
+    <slot />
+  </div>
+</section>

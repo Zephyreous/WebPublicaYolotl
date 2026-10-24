@@ -1,0 +1,20 @@
+# dependencias
+node_modules/
+
+# build
+dist/
+.astro/
+
+# entorno
+.env
+.env.*
+!.env.example
+
+# pruebas
+test-results/
+playwright-report/
+coverage/
+
+# logs y sistema
+npm-debug.log*
+.DS_Store

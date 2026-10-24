@@ -1,0 +1,43 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import TeamCard from '@/components/TeamCard.astro';
+import { PAGES } from '@/lib/seo';
+import camposImg from '@/assets/placeholders/equipo-campos.png';
+import royImg from '@/assets/placeholders/equipo-roy.png';
+import mayImg from '@/assets/placeholders/equipo-may.png';
+
+const team = [
+  {
+    name: 'Campos',
+    role: 'CEO y contacto con clientes',
+    bio: 'TODO: biografía breve.',
+    photo: camposImg,
+    photoAlt: 'Marcador: foto de Campos, CEO de Yolotl Labs, pendiente de imagen real',
+  },
+  {
+    name: 'Roy',
+    role: 'Desarrollo backend y frontend',
+    bio: 'TODO: biografía breve.',
+    photo: royImg,
+    photoAlt: 'Marcador: foto de Roy, desarrollador de Yolotl Labs, pendiente de imagen real',
+  },
+  {
+    name: 'May',
+    role: 'Diseño y marca',
+    bio: 'TODO: biografía breve.',
+    photo: mayImg,
+    photoAlt: 'Marcador: foto de May, diseñadora de Yolotl Labs, pendiente de imagen real',
+  },
+];
+---
+
+<BaseLayout page="nosotros">
+  <Hero title={PAGES.nosotros.title} subtitle="TODO: historia breve y misión de Yolotl Labs." />
+
+  <div class="container-site grid gap-6 py-16 md:grid-cols-3">
+    {team.map((member) => (
+      <TeamCard {...member} />
+    ))}
+  </div>
+</BaseLayout>

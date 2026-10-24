@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import { PAGES } from '@/lib/seo';
+
+const servicios = (await getCollection('servicios')).sort((a, b) => a.data.order - b.data.order);
+const rendered = await Promise.all(
+  servicios.map(async (servicio) => ({ servicio, Content: (await render(servicio)).Content })),
+);
+---
+
+<BaseLayout page="servicios">
+  <Hero
+    title={PAGES.servicios.title}
+    subtitle="TODO: introducción a los servicios de Yolotl Labs."
+    cta={{ href: '/contacto', label: 'Pide una demo' }}
+  />
+
+  <div class="container-site grid gap-6 py-16 md:grid-cols-3">
+    {rendered.map(({ servicio, Content }) => (
+      <ServiceCard
+        title={servicio.data.title}
+        summary={servicio.data.summary}
+        features={servicio.data.features}
+        headingLevel="h2"
+      >
+        <div class="mt-4 text-muted">
+          <Content />
+        </div>
+      </ServiceCard>
+    ))}
+  </div>
+</BaseLayout>

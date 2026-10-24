@@ -1,0 +1,28 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  name: string;
+  role: string;
+  bio: string;
+  photo: ImageMetadata;
+  photoAlt: string;
+}
+
+const { name, role, bio, photo, photoAlt } = Astro.props;
+---
+
+<article class="card text-center">
+  <Image
+    src={photo}
+    alt={photoAlt}
+    width={240}
+    height={240}
+    class="mx-auto rounded-full border-2"
+    style="border-color: var(--color-border-accent);"
+  />
+  <h2 class="mt-4 text-2xl">{name}</h2>
+  <p class="mt-1 font-semibold">{role}</p>
+  <p class="mt-3 text-muted">{bio}</p>
+</article>

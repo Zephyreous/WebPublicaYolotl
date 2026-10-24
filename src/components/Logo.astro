@@ -1,0 +1,78 @@
+---
+/**
+ * Logo de Yolotl Labs.
+ * - Por debajo de 110px de ancho se usa solo el isotipo (mínimo 16x16).
+ * - Área de respeto: padding igual a la altura de la "o" del wordmark.
+ * - Sin sombras, biseles, neón ni deformaciones: siempre se conserva la proporción.
+ */
+interface Props {
+  /** auto: positivo en tema claro y negativo en tema oscuro. */
+  variant?: 'auto' | 'positivo' | 'negativo' | 'isotipo';
+  /** Ancho en px del logo completo, sin contar el área de respeto. */
+  width?: number;
+  class?: string;
+}
+
+const { variant = 'auto', width = 160, class: className } = Astro.props;
+
+const MIN_FULL_WIDTH = 110;
+const MIN_ISOTIPO = 16;
+// TODO: ajustar a la proporción real del SVG oficial (el marcador es 240x60).
+const FULL_RATIO = 60 / 240;
+// TODO: calibrar con el SVG oficial (debe coincidir con --logo-clearspace-ratio en global.css).
+const CLEARSPACE_RATIO = 0.35;
+
+const useIsotipo = variant === 'isotipo' || width < MIN_FULL_WIDTH;
+const w = useIsotipo ? Math.max(Math.min(width, 64), MIN_ISOTIPO) : width;
+const h = useIsotipo ? w : Math.round(w * FULL_RATIO);
+const clearspace = Math.round(h * CLEARSPACE_RATIO);
+const alt = 'Yolotl Labs';
+---
+
+<span class:list={['logo', className]} style={`padding: ${clearspace}px;`}>
+  {useIsotipo ? (
+    <img src="/brand/isotipo.svg" width={w} height={h} alt={alt} />
+  ) : variant === 'auto' ? (
+    <>
+      <img class="logo-on-dark" src="/brand/logo-negativo.svg" width={w} height={h} alt={alt} />
+      <img class="logo-on-light" src="/brand/logo-positivo.svg" width={w} height={h} alt={alt} />
+    </>
+  ) : (
+    <img src={`/brand/logo-${variant}.svg`} width={w} height={h} alt={alt} />
+  )}
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    line-height: 0;
+  }
+
+  .logo img {
+    display: block;
+    max-width: none;
+    height: auto;
+  }
+
+  .logo-on-light {
+    display: none !important;
+  }
+
+  :global(:root[data-theme='light']) .logo-on-light {
+    display: block !important;
+  }
+
+  :global(:root[data-theme='light']) .logo-on-dark {
+    display: none !important;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme])) .logo-on-light {
+      display: block !important;
+    }
+
+    :global(:root:not([data-theme])) .logo-on-dark {
+      display: none !important;
+    }
+  }
+</style>

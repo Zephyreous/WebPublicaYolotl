@@ -1,0 +1,15 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { PAGES } from '@/lib/seo';
+---
+
+<BaseLayout page="noEncontrada" noindex>
+  <div class="container-site max-w-2xl py-24 text-center">
+    <p class="font-mono text-muted">404</p>
+    <h1 class="mt-2 text-4xl">{PAGES.noEncontrada.title}</h1>
+    <p class="mt-6 text-lg text-muted">{PAGES.noEncontrada.description}</p>
+    <a href="/" class="btn-secondary mt-8">
+      Volver al inicio
+    </a>
+  </div>
+</BaseLayout>

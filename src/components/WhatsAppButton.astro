@@ -1,0 +1,30 @@
+---
+import { whatsappUrl } from '@/lib/site';
+
+// Mientras el número sea TODO en lib/site.ts, el botón lleva a /contacto.
+const href = whatsappUrl() ?? '/contacto';
+const isExternal = href.startsWith('https://');
+---
+
+<a
+  href={href}
+  class="whatsapp-btn fixed right-4 bottom-4 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full border-2 border-yolotl-navy bg-yolotl-teal text-yolotl-navy md:hidden"
+  aria-label="Escríbenos por WhatsApp"
+  data-todo={isExternal ? undefined : 'Configurar SITE.whatsapp en src/lib/site.ts'}
+  {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="28"
+    height="28"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"></path>
+  </svg>
+</a>

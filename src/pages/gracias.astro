@@ -1,0 +1,16 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { PAGES } from '@/lib/seo';
+---
+
+<BaseLayout page="gracias" noindex>
+  <div class="container-site max-w-2xl py-24 text-center">
+    <h1 class="text-4xl">{PAGES.gracias.title}</h1>
+    <p class="mt-6 text-lg text-muted">
+      Gracias por escribirnos. TODO: indicar en cuánto tiempo respondemos.
+    </p>
+    <a href="/" class="btn-secondary mt-8">
+      Volver al inicio
+    </a>
+  </div>
+</BaseLayout>

@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { PAGES } from '@/lib/seo';
+import { SITE } from '@/lib/site';
+---
+
+<BaseLayout page="privacidad">
+  <article class="container-site max-w-3xl py-16">
+    <h1 class="text-4xl">{PAGES.privacidad.title}</h1>
+    <p class="todo mt-4">
+      TODO: texto de marcador. Debe redactarlo o revisarlo un profesional legal conforme a la Ley
+      Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).
+    </p>
+
+    <div class="mt-8 space-y-8">
+      <section>
+        <h2 class="text-2xl">Identidad y domicilio del responsable</h2>
+        <p class="mt-2 text-muted">
+          TODO: razón social de {SITE.name}, domicilio en {SITE.city} y datos de contacto.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-2xl">Datos personales que recabamos</h2>
+        <p class="mt-2 text-muted">
+          TODO: nombre, correo electrónico, teléfono y nombre del negocio, recabados mediante el
+          formulario de contacto.
+        </p>
+      </section>
+      <section>
+        <h2 class="text-2xl">Finalidades del tratamiento</h2>
+        <p class="mt-2 text-muted">TODO: finalidades primarias y secundarias.</p>
+      </section>
+      <section>
+        <h2 class="text-2xl">Transferencias y encargados</h2>
+        <p class="mt-2 text-muted">
+          TODO: proveedores que tratan datos (Web3Forms para el formulario y Plausible para
+          analítica sin cookies).
+        </p>
+      </section>
+      <section>
+        <h2 class="text-2xl">Derechos ARCO y revocación del consentimiento</h2>
+        <p class="mt-2 text-muted">TODO: medios y procedimiento para ejercer derechos ARCO.</p>
+      </section>
+      <section>
+        <h2 class="text-2xl">Cambios al aviso de privacidad</h2>
+        <p class="mt-2 text-muted">
+          TODO: cómo se comunicarán los cambios. Última actualización: TODO.
+        </p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

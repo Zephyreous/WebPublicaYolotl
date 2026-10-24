@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="60" viewBox="0 0 240 60" role="img" aria-labelledby="t">
+  <title id="t">Yolotl Labs (marcador)</title>
+  <!-- TODO: reemplazar por SVG oficial. Versión negativa, para fondo Navy (#0D1F38). -->
+  <rect x="1" y="1" width="238" height="58" fill="none" stroke="#64748B" stroke-dasharray="4 4"/>
+  <text x="120" y="30" text-anchor="middle" font-family="Plus Jakarta Sans, Montserrat, sans-serif" font-weight="800" font-size="20" letter-spacing="1.6" fill="#F5F3EE">YOLOTL LABS</text>
+  <text x="120" y="48" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#F5F3EE">TODO: reemplazar por SVG oficial</text>
+</svg>

@@ -1,0 +1,248 @@
+---
+import { SITE } from '@/lib/site';
+
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+const site = Astro.site ?? new URL(SITE.url);
+const thanksUrl = new URL('/gracias', site).toString();
+---
+
+<form
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  class="card space-y-5"
+  novalidate
+  data-contact-form
+  data-configured={accessKey ? 'true' : 'false'}
+>
+  <input type="hidden" name="access_key" value={accessKey} />
+  <input type="hidden" name="subject" value={`Nuevo mensaje desde ${SITE.domain}`} />
+  <input type="hidden" name="from_name" value={SITE.name} />
+  <!-- Sin JavaScript, Web3Forms redirige aquí al terminar. -->
+  <input type="hidden" name="redirect" value={thanksUrl} />
+
+  <!-- Honeypot anti-spam: invisible para personas; si un bot lo marca, Web3Forms descarta el envío. -->
+  <div class="hidden" aria-hidden="true">
+    <label for="botcheck">No llenar este campo</label>
+    <input type="checkbox" id="botcheck" name="botcheck" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div>
+    <label for="nombre" class="block font-semibold">
+      Nombre <span aria-hidden="true">*</span>
+    </label>
+    <input
+      id="nombre"
+      name="name"
+      type="text"
+      autocomplete="name"
+      required
+      aria-describedby="nombre-error"
+      class="field"
+    />
+    <p id="nombre-error" class="field-error" data-error-for="nombre" hidden>
+      Error: escribe tu nombre.
+    </p>
+  </div>
+
+  <div>
+    <label for="correo" class="block font-semibold">
+      Correo electrónico <span aria-hidden="true">*</span>
+    </label>
+    <input
+      id="correo"
+      name="email"
+      type="email"
+      autocomplete="email"
+      inputmode="email"
+      required
+      aria-describedby="correo-error"
+      class="field"
+    />
+    <p id="correo-error" class="field-error" data-error-for="correo" hidden>
+      Error: escribe un correo válido, por ejemplo nombre@dominio.com.
+    </p>
+  </div>
+
+  <div>
+    <label for="telefono" class="block font-semibold">
+      Teléfono o WhatsApp (opcional)
+    </label>
+    <input id="telefono" name="phone" type="tel" autocomplete="tel" class="field" />
+  </div>
+
+  <div>
+    <label for="negocio" class="block font-semibold">
+      Nombre del negocio (opcional)
+    </label>
+    <input id="negocio" name="company" type="text" autocomplete="organization" class="field" />
+  </div>
+
+  <div>
+    <label for="mensaje" class="block font-semibold">
+      ¿En qué te ayudamos? <span aria-hidden="true">*</span>
+    </label>
+    <textarea
+      id="mensaje"
+      name="message"
+      rows="5"
+      required
+      minlength="10"
+      aria-describedby="mensaje-error"
+      class="field"
+    ></textarea>
+    <p id="mensaje-error" class="field-error" data-error-for="mensaje" hidden>
+      Error: cuéntanos un poco más (mínimo 10 caracteres).
+    </p>
+  </div>
+
+  <div>
+    <div class="flex items-start gap-3">
+      <input
+        id="privacidad"
+        name="privacy_consent"
+        type="checkbox"
+        value="acepto"
+        required
+        aria-describedby="privacidad-error"
+        class="mt-1 h-5 w-5 shrink-0"
+      />
+      <label for="privacidad">
+        Acepto el <a href="/privacidad">aviso de privacidad</a>.<span aria-hidden="true">*</span>
+      </label>
+    </div>
+    <p id="privacidad-error" class="field-error" data-error-for="privacidad" hidden>
+      Error: necesitamos tu consentimiento para responderte.
+    </p>
+  </div>
+
+  <p class="text-sm text-muted">Los campos con * son obligatorios.</p>
+
+  <button type="submit" class="btn-cta w-full sm:w-auto">
+    Enviar mensaje
+  </button>
+
+  <div role="status" aria-live="polite" class="form-status" data-form-status hidden></div>
+</form>
+
+<style>
+  .field {
+    display: block;
+    width: 100%;
+    margin-top: var(--space-2);
+    min-height: 3rem;
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font: inherit;
+  }
+
+  .field[aria-invalid='true'] {
+    border: 2px solid var(--color-error);
+  }
+
+  input[type='checkbox'] {
+    accent-color: var(--yolotl-teal);
+  }
+
+  .field-error {
+    margin-top: var(--space-2);
+    color: var(--color-error);
+    font-weight: 600;
+  }
+
+  .form-status {
+    padding: var(--space-4);
+    border: 2px solid var(--color-border-accent);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+  }
+
+  .form-status[data-state='error'] {
+    border-color: var(--color-error);
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    const showStatus = (state: 'success' | 'error' | 'sending', message: string) => {
+      if (!status) return;
+      status.hidden = false;
+      status.dataset.state = state;
+      status.textContent = message;
+    };
+
+    const validateField = (field: HTMLInputElement | HTMLTextAreaElement) => {
+      const error = form.querySelector<HTMLElement>(`[data-error-for="${field.id}"]`);
+      const valid = field.checkValidity();
+      field.setAttribute('aria-invalid', String(!valid));
+      if (error) error.hidden = valid;
+      return valid;
+    };
+
+    const fields = Array.from(
+      form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]'),
+    );
+
+    // Al salir de un campo solo se muestran errores; se ocultan mientras se corrige.
+    // Ocultarlos en blur movería el layout justo cuando se hace clic en el siguiente campo.
+    fields.forEach((field) => {
+      field.addEventListener('blur', () => {
+        if (field.type !== 'checkbox' && field.value !== '' && !field.checkValidity()) {
+          validateField(field);
+        }
+      });
+      field.addEventListener('input', () => {
+        if (field.getAttribute('aria-invalid') === 'true') validateField(field);
+      });
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const invalid = fields.filter((field) => !validateField(field));
+      if (invalid.length > 0) {
+        showStatus('error', 'Revisa los campos marcados con error.');
+        invalid[0]?.focus();
+        return;
+      }
+
+      if (form.dataset.configured !== 'true') {
+        // TODO: definir PUBLIC_WEB3FORMS_KEY en .env para habilitar el envío.
+        showStatus(
+          'error',
+          'El formulario aún no está configurado. Escríbenos por WhatsApp o correo mientras tanto.',
+        );
+        return;
+      }
+
+      if (submit) submit.disabled = true;
+      showStatus('sending', 'Enviando tu mensaje…');
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new FormData(form),
+        });
+        const result: { success?: boolean } = await response.json();
+        if (!response.ok || !result.success) throw new Error('Envío rechazado');
+        showStatus('success', '¡Gracias! Recibimos tu mensaje.');
+        window.location.assign('/gracias');
+      } catch {
+        showStatus(
+          'error',
+          'No pudimos enviar tu mensaje. Intenta de nuevo en unos minutos o escríbenos por WhatsApp.',
+        );
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>

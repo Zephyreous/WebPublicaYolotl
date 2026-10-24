@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# TODO: confirmar dominio definitivo.
+Sitemap: https://yolotlabs.com/sitemap-index.xml

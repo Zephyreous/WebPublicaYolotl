@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import CaseCard from '@/components/CaseCard.astro';
+import { PAGES } from '@/lib/seo';
+
+const casos = (await getCollection('casos')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<BaseLayout page="casos">
+  <Hero title={PAGES.casos.title} subtitle="TODO: introducción a los casos de estudio." />
+
+  <div class="container-site grid gap-6 py-16 md:grid-cols-2">
+    {casos.map((caso) => (
+      <CaseCard entry={caso} headingLevel="h2" />
+    ))}
+  </div>
+</BaseLayout>

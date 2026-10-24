@@ -1,0 +1,18 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import ProductPOS from '@/components/ProductPOS.astro';
+import { PAGES } from '@/lib/seo';
+---
+
+<BaseLayout page="productoPos">
+  <Hero
+    title={PAGES.productoPos.title}
+    subtitle="TODO: propuesta de valor del POS para talleres de motos."
+    cta={{ href: '/contacto', label: 'Pide una demo' }}
+  />
+
+  <div class="container-site py-16">
+    <ProductPOS />
+  </div>
+</BaseLayout>
