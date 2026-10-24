@@ -11,7 +11,11 @@ const casos = (await getCollection('casos')).sort(
 ---
 
 <BaseLayout page="casos">
-  <Hero title={PAGES.casos.title} subtitle="TODO: introducción a los casos de estudio." />
+  <Hero
+    badge="Proyectos & Resultados Reales"
+    title={PAGES.casos.title}
+    subtitle="Conoce cómo acompañamos a negocios locales a transformar sus procesos manuales en plataformas automatizadas y eficientes."
+  />
 
   <div class="container-site grid gap-6 py-16 md:grid-cols-2">
     {casos.map((caso) => (

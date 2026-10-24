@@ -1,44 +1,62 @@
 ---
 /**
  * Logo de Yolotl Labs.
- * - Por debajo de 110px de ancho se usa solo el isotipo (mínimo 16x16).
- * - Área de respeto: padding igual a la altura de la "o" del wordmark.
- * - Sin sombras, biseles, neón ni deformaciones: siempre se conserva la proporción.
+ * - Basado en los SVG oficiales de marca (viewBox 520x180 para logo completo, 200x200 isotipo, 512x512 icono).
+ * - Por debajo de 110px de ancho se usa el isotipo (mínimo 16x16).
+ * - Área de respeto: padding proporcional a la altura de la "o" del wordmark (ratio 0.22).
+ * - Sin sombras, biseles ni efectos neón, preservando proporciones originales.
  */
 interface Props {
   /** auto: positivo en tema claro y negativo en tema oscuro. */
-  variant?: 'auto' | 'positivo' | 'negativo' | 'isotipo';
-  /** Ancho en px del logo completo, sin contar el área de respeto. */
+  variant?: 'auto' | 'positivo' | 'negativo' | 'isotipo' | 'icono';
+  /** Ancho en px del logo completo o del icono/isotipo. */
   width?: number;
   class?: string;
+  withClearspace?: boolean;
+  alt?: string;
 }
 
-const { variant = 'auto', width = 160, class: className } = Astro.props;
+const {
+  variant = 'auto',
+  width = 160,
+  class: className,
+  withClearspace = true,
+  alt = 'Yolotl Labs',
+} = Astro.props;
 
 const MIN_FULL_WIDTH = 110;
 const MIN_ISOTIPO = 16;
-// TODO: ajustar a la proporción real del SVG oficial (el marcador es 240x60).
-const FULL_RATIO = 60 / 240;
-// TODO: calibrar con el SVG oficial (debe coincidir con --logo-clearspace-ratio en global.css).
-const CLEARSPACE_RATIO = 0.35;
+// Proporción oficial del SVG completo (520x180):
+const FULL_RATIO = 180 / 520;
+// Área de respeto oficial (altura de la "O"):
+const CLEARSPACE_RATIO = 0.22;
 
-const useIsotipo = variant === 'isotipo' || width < MIN_FULL_WIDTH;
-const w = useIsotipo ? Math.max(Math.min(width, 64), MIN_ISOTIPO) : width;
-const h = useIsotipo ? w : Math.round(w * FULL_RATIO);
-const clearspace = Math.round(h * CLEARSPACE_RATIO);
-const alt = 'Yolotl Labs';
+const useIcono = variant === 'icono';
+const useIsotipo = variant === 'isotipo' || (!useIcono && width < MIN_FULL_WIDTH);
+const isSquare = useIsotipo || useIcono;
+
+const w = isSquare ? Math.max(width, MIN_ISOTIPO) : width;
+const h = isSquare ? w : Math.round(w * FULL_RATIO);
+const clearspace = withClearspace ? Math.round(h * CLEARSPACE_RATIO) : 0;
 ---
 
-<span class:list={['logo', className]} style={`padding: ${clearspace}px;`}>
-  {useIsotipo ? (
-    <img src="/brand/isotipo.svg" width={w} height={h} alt={alt} />
+<span
+  class:list={['logo', className]}
+  style={clearspace > 0 ? `padding: ${clearspace}px;` : undefined}
+>
+  {useIcono ? (
+    <img src="/brand/Icono.svg" width={w} height={h} alt={alt} />
+  ) : useIsotipo ? (
+    <img src="/brand/Isotipo.svg" width={w} height={h} alt={alt} />
   ) : variant === 'auto' ? (
     <>
-      <img class="logo-on-dark" src="/brand/logo-negativo.svg" width={w} height={h} alt={alt} />
-      <img class="logo-on-light" src="/brand/logo-positivo.svg" width={w} height={h} alt={alt} />
+      <img class="logo-on-dark" src="/brand/Log+TextDark.svg" width={w} height={h} alt={alt} />
+      <img class="logo-on-light" src="/brand/Log+TextLight.svg" width={w} height={h} alt={alt} />
     </>
+  ) : variant === 'negativo' ? (
+    <img src="/brand/Log+TextDark.svg" width={w} height={h} alt={alt} />
   ) : (
-    <img src={`/brand/logo-${variant}.svg`} width={w} height={h} alt={alt} />
+    <img src="/brand/Log+TextLight.svg" width={w} height={h} alt={alt} />
   )}
 </span>
 
@@ -46,6 +64,8 @@ const alt = 'Yolotl Labs';
   .logo {
     display: inline-flex;
     line-height: 0;
+    align-items: center;
+    justify-content: center;
   }
 
   .logo img {

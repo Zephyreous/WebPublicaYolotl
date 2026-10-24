@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" fill="none">
+  <!-- Fondo Principal Azul Noche -->
+  <rect width="1200" height="630" fill="#0D1F38" />
+
+  <!-- Líneas Geométricas de Conectividad (Textura de Marca) -->
+  <g stroke-width="3" fill="none" opacity="0.85">
+    <!-- Trazos superiores izquierdos -->
+    <polyline points="-20,420 220,70 840,70 910,-20" stroke="#19A796" />
+    <polyline points="-20,130 330,130 430,-20" stroke="#E96E24" />
+    <!-- Trazos inferiores derechos -->
+    <polyline points="290,650 410,490 1220,490" stroke="#19A796" />
+    <polyline points="820,650 1220,140" stroke="#E96E24" />
+  </g>
+
+  <!-- Contenedor Central del Logo (Escalado para 1200x630) -->
+  <g transform="translate(220, 145) scale(1.5)">
+    <g stroke-linecap="round" stroke-linejoin="round">
+      <!-- Pecho y cola inferior -->
+      <path d="M 155 62 C 138 66, 134 95, 125 112 C 115 130, 98 134, 82 134 L 68 164 C 82 158, 92 146, 95 134" fill="#E96E24" stroke="#E96E24" stroke-width="4" />
+      <!-- Pico -->
+      <path d="M 142 62 L 192 58 L 144 70 Z" fill="#E96E24" />
+      <!-- Ala secundaria izquierda -->
+      <path d="M 96 74 L 38 74 C 46 94, 66 106, 90 108" stroke="#F5F3EE" stroke-width="6" fill="none" />
+      <!-- Ala superior -->
+      <path d="M 65 74 L 60 40 L 106 78" stroke="#19A796" stroke-width="6" fill="none" />
+      <!-- Cabeza y arco dorsal -->
+      <path d="M 104 75 C 110 52, 132 48, 145 62" stroke="#19A796" stroke-width="6" fill="none" />
+      <!-- Cuerpo hacia la cola -->
+      <path d="M 118 92 C 118 118, 98 134, 82 134 L 52 164 L 90 108" stroke="#19A796" stroke-width="6" fill="none" />
+      <!-- Núcleo central -->
+      <circle cx="98" cy="92" r="18" fill="#0D1F38" stroke="#19A796" stroke-width="6" />
+      <!-- Ojo -->
+      <circle cx="128" cy="63" r="4" fill="#F5F3EE" />
+    </g>
+
+    <!-- Tipografía YOLOTL -->
+    <text x="198" y="114" fill="#F5F3EE" font-family="&#39;Plus Jakarta Sans&#39;, &#39;Montserrat&#39;, system-ui, -apple-system, sans-serif" font-size="54" font-weight="800" letter-spacing="0.08em">YOLOTL</text>
+  </g>
+
+  <!-- Subtítulo / Dominio Inferior -->
+  <text x="600" y="425" text-anchor="middle" fill="#19A796" font-family="&#39;JetBrains Mono&#39;, &#39;Fira Code&#39;, monospace" font-size="22" font-weight="600" letter-spacing="0.18em">SAAS LABS • YOLOTLABS.COM</text>
+</svg>

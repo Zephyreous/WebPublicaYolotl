@@ -51,8 +51,8 @@
   --radius-lg: 1rem;
 
   /* Logo: área de respeto = altura de la "o" del wordmark.
-     TODO: calibrar contra el SVG oficial (aprox. 0.35 de la altura del logo completo). */
-  --logo-clearspace-ratio: 0.35;
+     Calibrado con el SVG oficial (aprox. 0.22 de la altura del logo completo). */
+  --logo-clearspace-ratio: 0.22;
   --logo-min-width: 110px;
 }
 

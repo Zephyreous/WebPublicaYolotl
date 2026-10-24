@@ -16,22 +16,23 @@ const modules = [
   {
     title: 'Punto de venta',
     description:
-      'TODO: cobro de refacciones y mano de obra, tickets, cortes de caja y métodos de pago.',
+      'Cobro de refacciones y mano de obra, emisión de tickets digitales, cortes de caja y métodos de pago mixtos.',
     image: ventaImg,
-    alt: 'Marcador: captura de la pantalla de cobro del POS, pendiente de imagen real',
+    alt: 'Captura de la pantalla de cobro del POS',
   },
   {
-    title: 'Inventario',
-    description: 'TODO: control de refacciones, existencias mínimas, proveedores y entradas.',
+    title: 'Control de inventario',
+    description:
+      'Gestión inteligente de refacciones, alertas de existencias mínimas, catálogo de proveedores y entradas automáticas.',
     image: inventarioImg,
-    alt: 'Marcador: captura del módulo de inventario de refacciones, pendiente de imagen real',
+    alt: 'Captura del módulo de inventario de refacciones',
   },
   {
     title: 'Asistente con IA',
     description:
-      'TODO: sugerencias de compra, diagnóstico asistido y respuestas sobre ventas del taller.',
+      'Sugerencias de compra oportunas, diagnóstico técnico asistido y reportes conversacionales sobre las ventas del taller.',
     image: iaImg,
-    alt: 'Marcador: captura del asistente con inteligencia artificial, pendiente de imagen real',
+    alt: 'Captura del asistente con inteligencia artificial',
   },
 ];
 ---
@@ -39,7 +40,7 @@ const modules = [
 <div class="grid gap-6 md:grid-cols-3">
   {modules.map((module) => (
     <article class="card flex flex-col">
-      {!compact && (
+      {!compact ? (
         <Image
           src={module.image}
           alt={module.alt}
@@ -47,6 +48,10 @@ const modules = [
           sizes="(min-width: 768px) 33vw, 100vw"
           class="mb-4 rounded-md"
         />
+      ) : (
+        <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-bg">
+          <img src="/brand/Isotipo.svg" width="22" height="22" alt="" aria-hidden="true" />
+        </div>
       )}
       <Heading class="text-xl">{module.title}</Heading>
       <p class="mt-2 text-muted">{module.description}</p>
@@ -56,14 +61,26 @@ const modules = [
 
 {!compact && (
   <section class="card mt-8 md:flex md:items-center md:justify-between" aria-labelledby="precio">
-    <div>
-      <h2 id="precio" class="text-2xl">
-        Precio
-      </h2>
-      <p class="tabular mt-2 text-3xl font-semibold">
-        $<span class="todo">TODO</span> MXN <span class="text-base text-muted">/ mes</span>
-      </p>
-      <p class="mt-1 text-sm text-muted">TODO: confirmar precio, IVA y plan de pagos.</p>
+    <div class="flex items-start gap-4">
+      <img
+        src="/brand/Icono.svg"
+        width="48"
+        height="48"
+        alt=""
+        class="hidden sm:block rounded-xl shrink-0"
+        aria-hidden="true"
+      />
+      <div>
+        <h2 id="precio" class="text-2xl">
+          Precio
+        </h2>
+        <p class="tabular mt-2 text-3xl font-semibold">
+          $<span class="todo">TODO</span> MXN <span class="text-base text-muted">/ mes</span>
+        </p>
+        <p class="mt-1 text-sm text-muted">
+          Planes accesibles diseñados para talleres independientes y cadenas de servicio.
+        </p>
+      </div>
     </div>
     <a href="/contacto" class="btn-cta mt-6 md:mt-0">
       Pide una demo

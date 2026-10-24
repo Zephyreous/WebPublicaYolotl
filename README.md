@@ -86,11 +86,16 @@ clases `bg-bg`, `text-fg`, `text-muted`, `bg-cta`…) que cambian según `data-t
 `data-theme` en `<html>`: la preferencia guardada (botón del header) manda; si no hay, la página de inicio usa el
 modo oscuro y las demás siguen `prefers-color-scheme`. Sin JavaScript se aplica `prefers-color-scheme`.
 
-### Logo
+### Logo e Identidad
 
-- Archivos en `public/brand/`. **Los actuales son marcadores**: reemplazar por los SVG oficiales.
-- Ancho mínimo del logo completo: 110px; por debajo, `Logo.astro` usa el isotipo (mínimo 16×16px).
-- Área de respeto: la altura de la "o" del wordmark (`CLEARSPACE_RATIO` en `Logo.astro`, por calibrar).
+- Archivos oficiales en `public/brand/`:
+  - `Isotipo.svg`: Colibrí geométrico (200×200px) con el nodo central y alas vectoriales.
+  - `Icono.svg`: Emblema en fondo Azul Noche (`#0D1F38`, 512×512px con esquinas redondeadas) para app icon y favicon.
+  - `Log+TextDark.svg` / `logo-dark.svg`: Isotipo + wordmark YOLOTL para fondos oscuros.
+  - `Log+TextLight.svg` / `logo-light.svg`: Isotipo + wordmark YOLOTL para fondos claros.
+  - `Banner.svg`: Banner institucional oficial (1200×630px) con líneas de red y colibrí escalado.
+- Ancho mínimo del logo completo: 110px; por debajo, `Logo.astro` conmuta automáticamente al isotipo.
+- Área de respeto: calibrada con la altura de la «O» del wordmark (`CLEARSPACE_RATIO = 0.22` en `Logo.astro` y `global.css`).
 - Prohibido: sombras, biseles, neón, deformar la proporción o rellenar el círculo central.
   `tests/brand-rules.test.ts` impide sombras en el código.
 

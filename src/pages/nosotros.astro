@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import TeamCard from '@/components/TeamCard.astro';
+import Logo from '@/components/Logo.astro';
 import { PAGES } from '@/lib/seo';
 import camposImg from '@/assets/placeholders/equipo-campos.png';
 import royImg from '@/assets/placeholders/equipo-roy.png';
@@ -33,11 +34,86 @@ const team = [
 ---
 
 <BaseLayout page="nosotros">
-  <Hero title={PAGES.nosotros.title} subtitle="TODO: historia breve y misión de Yolotl Labs." />
+  <Hero
+    badge="Ingeniería y corazón mexicano"
+    title={PAGES.nosotros.title}
+    subtitle="Somos un estudio de ingeniería de software con sede en Puebla, México, apasionados por crear tecnología de alto impacto para negocios locales y medianas empresas."
+  />
 
-  <div class="container-site grid gap-6 py-16 md:grid-cols-3">
-    {team.map((member) => (
-      <TeamCard {...member} />
-    ))}
-  </div>
+  <section class="container-site py-16" aria-labelledby="equipo-titulo">
+    <div class="flex items-center gap-3">
+      <img src="/brand/Isotipo.svg" width="28" height="28" alt="" aria-hidden="true" />
+      <h2 id="equipo-titulo" class="text-3xl">
+        Nuestro equipo
+      </h2>
+    </div>
+    <div class="mt-8 grid gap-6 md:grid-cols-3">
+      {team.map((member) => (
+        <TeamCard {...member} />
+      ))}
+    </div>
+  </section>
+
+  <section class="border-t border-border bg-surface py-16" aria-labelledby="identidad-titulo">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <span class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm font-semibold">
+          <img src="/brand/Isotipo.svg" width="18" height="18" alt="" aria-hidden="true" />
+          Identidad de Marca
+        </span>
+        <h2 id="identidad-titulo" class="mt-4 text-3xl">
+          El corazón y la agilidad de nuestra ingeniería
+        </h2>
+        <p class="mt-4 text-muted">
+          En náhuatl, <strong>Yólotl</strong> significa «corazón». Nuestro símbolo es el colibrí
+          geométrico (Huitzilin): representa la velocidad, la precisión analítica y la energía que
+          impulsa a las empresas locales hacia la era digital.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-8 md:grid-cols-3">
+        <div class="card flex flex-col items-center p-8 text-center">
+          <div class="flex h-32 w-32 items-center justify-center rounded-2xl bg-bg p-4 border border-border">
+            <img
+              src="/brand/Isotipo.svg"
+              width="96"
+              height="96"
+              alt="Isotipo Yolotl Labs: Colibrí geométrico"
+            />
+          </div>
+          <h3 class="mt-6 text-xl">Isotipo Oficial</h3>
+          <p class="mt-2 text-sm text-muted">
+            Colibrí vectorial con nodo central (el corazón) y alas en geometría pura.
+          </p>
+        </div>
+
+        <div class="card flex flex-col items-center p-8 text-center">
+          <div class="flex h-32 w-32 items-center justify-center p-2">
+            <img
+              src="/brand/Icono.svg"
+              width="112"
+              height="112"
+              alt="Icono de aplicación Yolotl Labs"
+              class="rounded-2xl"
+            />
+          </div>
+          <h3 class="mt-6 text-xl">Icono de Aplicación</h3>
+          <p class="mt-2 text-sm text-muted">
+            Emblema en Azul Noche para plataformas móviles, favicon y aplicaciones web.
+          </p>
+        </div>
+
+        <div class="card flex flex-col items-center p-8 text-center">
+          <div class="flex h-32 w-full items-center justify-center rounded-2xl bg-bg p-4 border border-border">
+            <Logo width={180} withClearspace={false} />
+          </div>
+          <h3 class="mt-6 text-xl">Logotipo Completo</h3>
+          <p class="mt-2 text-sm text-muted">
+            Isotipo + tipografía institucional con conmutación inteligente según el tema
+            claro/oscuro.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>

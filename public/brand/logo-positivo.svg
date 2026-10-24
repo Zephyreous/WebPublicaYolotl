@@ -1,7 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="240" height="60" viewBox="0 0 240 60" role="img" aria-labelledby="t">
-  <title id="t">Yolotl Labs (marcador)</title>
-  <!-- TODO: reemplazar por SVG oficial. Versión positiva, para fondo Off-White (#F5F3EE). -->
-  <rect x="1" y="1" width="238" height="58" fill="none" stroke="#64748B" stroke-dasharray="4 4"/>
-  <text x="120" y="30" text-anchor="middle" font-family="Plus Jakarta Sans, Montserrat, sans-serif" font-weight="800" font-size="20" letter-spacing="1.6" fill="#0D1F38">YOLOTL LABS</text>
-  <text x="120" y="48" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#0D1F38">TODO: reemplazar por SVG oficial</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" width="520" height="180" fill="none">
+  <!-- ISOTIPO: COLIBRÍ GEOMÉTRICO (MODO CLARO) -->
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <!-- Pecho y cola inferior (Naranja Néctar) -->
+    <path d="M 155 62 C 138 66, 134 95, 125 112 C 115 130, 98 134, 82 134 L 68 164 C 82 158, 92 146, 95 134" fill="#E96E24" stroke="#E96E24" stroke-width="4" />
+    <!-- Pico (Naranja Néctar) -->
+    <path d="M 142 62 L 192 58 L 144 70 Z" fill="#E96E24" />
+    <!-- Ala secundaria izquierda (Azul Noche para contrastar en fondo claro) -->
+    <path d="M 96 74 L 38 74 C 46 94, 66 106, 90 108" stroke="#0D1F38" stroke-width="6" fill="none" />
+    <!-- Ala superior -->
+    <path d="M 65 74 L 60 40 L 106 78" stroke="#19A796" stroke-width="6" fill="none" />
+    <!-- Cabeza y arco dorsal -->
+    <path d="M 104 75 C 110 52, 132 48, 145 62" stroke="#19A796" stroke-width="6" fill="none" />
+    <!-- Cuerpo hacia la cola -->
+    <path d="M 118 92 C 118 118, 98 134, 82 134 L 52 164 L 90 108" stroke="#19A796" stroke-width="6" fill="none" />
+    <!-- Núcleo central (Corazón / Nodo) -->
+    <circle cx="98" cy="92" r="18" fill="#F5F3EE" stroke="#19A796" stroke-width="6" />
+    <!-- Ojo -->
+    <circle cx="128" cy="63" r="4" fill="#0D1F38" />
+  </g>
+
+  <!-- LOGOTIPO: TIPOGRAFÍA YOLOTL -->
+  <text x="198" y="114" fill="#0D1F38" font-family="&#39;Plus Jakarta Sans&#39;, &#39;Montserrat&#39;, system-ui, -apple-system, sans-serif" font-size="54" font-weight="800" letter-spacing="0.08em">YOLOTL</text>
 </svg>

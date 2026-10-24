@@ -13,6 +13,9 @@ const { title, summary, features = [], headingLevel: Heading = 'h3' } = Astro.pr
   class="card flex h-full flex-col border-t-4"
   style="border-top-color: var(--color-border-accent);"
 >
+  <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-bg">
+    <img src="/brand/Isotipo.svg" width="22" height="22" alt="" aria-hidden="true" />
+  </div>
   <Heading class="text-xl">{title}</Heading>
   <p class="mt-3 text-muted">{summary}</p>
   {features.length > 0 && (
