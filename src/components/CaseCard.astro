@@ -11,13 +11,15 @@ const { entry, headingLevel: Heading = 'h3' } = Astro.props;
 const { title, client, industry, summary, cover, coverAlt, results } = entry.data;
 ---
 
-<article class="card overflow-hidden p-0">
-  <Image
-    src={cover}
-    alt={coverAlt}
-    widths={[400, 800, 1200]}
-    sizes="(min-width: 768px) 50vw, 100vw"
-  />
+<article class="card card-hover flex h-full flex-col overflow-hidden p-0">
+  <div class="card-media">
+    <Image
+      src={cover}
+      alt={coverAlt}
+      widths={[400, 800, 1200]}
+      sizes="(min-width: 768px) 50vw, 100vw"
+    />
+  </div>
   <div class="p-6">
     <p class="text-sm font-medium text-muted">
       {client} · {industry}

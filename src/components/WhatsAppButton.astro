@@ -28,3 +28,27 @@ const isExternal = href.startsWith('https://');
     <path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z"></path>
   </svg>
 </a>
+
+<style>
+  .whatsapp-btn {
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .whatsapp-btn:hover {
+    transform: scale(1.08) rotate(-6deg);
+  }
+
+  /* Entrada con rebote suave al cargar. */
+  @media (prefers-reduced-motion: no-preference) {
+    .whatsapp-btn {
+      animation: pop-in 500ms var(--ease-out) 600ms both;
+    }
+  }
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+  }
+</style>

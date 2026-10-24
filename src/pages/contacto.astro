@@ -1,4 +1,5 @@
 ---
+import Logo from '@/components/Logo.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ContactForm from '@/components/ContactForm.astro';
 import { PAGES } from '@/lib/seo';
@@ -11,7 +12,7 @@ const wa = whatsappUrl();
   <div class="container-site grid gap-12 py-16 md:grid-cols-2">
     <div>
       <span class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm font-semibold">
-        <img src="/brand/Isotipo.svg" width="18" height="18" alt="" aria-hidden="true" />
+        <Logo variant="isotipo" width={18} withClearspace={false} alt="" />
         Contacto Directo
       </span>
       <h1 class="mt-4 text-4xl md:text-5xl">{PAGES.contacto.title}</h1>

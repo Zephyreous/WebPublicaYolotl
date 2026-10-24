@@ -13,15 +13,13 @@ interface Props {
 const { name, role, bio, photo, photoAlt } = Astro.props;
 ---
 
-<article class="card text-center">
-  <Image
-    src={photo}
-    alt={photoAlt}
-    width={240}
-    height={240}
-    class="mx-auto rounded-full border-2"
+<article class="card card-hover text-center" data-reveal>
+  <div
+    class="card-media mx-auto w-fit rounded-full border-2"
     style="border-color: var(--color-border-accent);"
-  />
+  >
+    <Image src={photo} alt={photoAlt} width={240} height={240} class="rounded-full" />
+  </div>
   <h2 class="mt-4 text-2xl">{name}</h2>
   <p class="mt-1 font-semibold">{role}</p>
   <p class="mt-3 text-muted">{bio}</p>

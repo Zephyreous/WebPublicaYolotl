@@ -1,16 +1,17 @@
 ---
+import Logo from '@/components/Logo.astro';
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import ServiceCard from '@/components/ServiceCard.astro';
 import ProductPOS from '@/components/ProductPOS.astro';
-import CaseCard from '@/components/CaseCard.astro';
+import CaseCarousel from '@/components/CaseCarousel.astro';
 import { PAGES } from '@/lib/seo';
 
 const servicios = (await getCollection('servicios')).sort((a, b) => a.data.order - b.data.order);
 const casos = (await getCollection('casos'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 2);
+  .slice(0, 6);
 ---
 
 <BaseLayout page="inicio" defaultTheme="dark">
@@ -21,7 +22,7 @@ const casos = (await getCollection('casos'))
     cta={{ href: '/contacto', label: 'Pide una demo' }}
     secondary={{ href: '/servicios', label: 'Ver servicios' }}
   >
-    <div slot="visual" class="card overflow-hidden p-0 border border-border">
+    <div slot="visual" class="float card overflow-hidden p-0">
       <img
         src="/brand/Banner.svg"
         width="1200"
@@ -34,8 +35,8 @@ const casos = (await getCollection('casos'))
   </Hero>
 
   <section class="container-site py-16" aria-labelledby="servicios-titulo">
-    <div class="flex items-center gap-3">
-      <img src="/brand/Isotipo.svg" width="28" height="28" alt="" aria-hidden="true" />
+    <div class="flex items-center gap-3" data-reveal>
+      <Logo variant="isotipo" width={28} withClearspace={false} alt="" />
       <h2 id="servicios-titulo" class="text-3xl">
         Servicios
       </h2>
@@ -46,13 +47,15 @@ const casos = (await getCollection('casos'))
       ))}
     </div>
     <p class="mt-6">
-      <a href="/servicios">Conoce todos los servicios</a>
+      <a href="/servicios" class="link-arrow">
+        Conoce todos los servicios
+      </a>
     </p>
   </section>
 
   <section class="border-y border-border bg-surface py-16" aria-labelledby="pos-titulo">
     <div class="container-site">
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3" data-reveal>
         <img
           src="/brand/Icono.svg"
           width="32"
@@ -65,7 +68,7 @@ const casos = (await getCollection('casos'))
           Punto de venta para talleres de motos
         </h2>
       </div>
-      <p class="mt-3 max-w-2xl text-muted">
+      <p class="mt-3 max-w-2xl text-muted" data-reveal>
         Diseñado específicamente para el flujo de trabajo de talleres mecánicos: control de
         refacciones, cobranza ágil y diagnóstico asistido por IA.
       </p>
@@ -73,51 +76,56 @@ const casos = (await getCollection('casos'))
         <ProductPOS compact headingLevel="h3" />
       </div>
       <p class="mt-6">
-        <a href="/producto-pos">Ver el producto POS</a>
+        <a href="/producto-pos" class="link-arrow">
+          Ver el producto POS
+        </a>
       </p>
     </div>
   </section>
 
   <section class="container-site py-16" aria-labelledby="casos-titulo">
-    <div class="flex items-center gap-3">
-      <img src="/brand/Isotipo.svg" width="28" height="28" alt="" aria-hidden="true" />
+    <div class="flex items-center gap-3" data-reveal>
+      <Logo variant="isotipo" width={28} withClearspace={false} alt="" />
       <h2 id="casos-titulo" class="text-3xl">
         Casos de estudio
       </h2>
     </div>
-    <div class="mt-8 grid gap-6 md:grid-cols-2">
-      {casos.map((caso) => (
-        <CaseCard entry={caso} />
-      ))}
+    <div class="mt-8" data-reveal>
+      <CaseCarousel entries={casos} />
     </div>
     <p class="mt-6">
-      <a href="/casos">Ver todos los casos</a>
+      <a href="/casos" class="link-arrow">
+        Ver todos los casos
+      </a>
     </p>
   </section>
 
-  <section class="container-site pb-8" aria-labelledby="cta-titulo">
-    <div class="card md:flex md:items-center md:justify-between">
-      <div class="flex items-start gap-4">
-        <img
-          src="/brand/Icono.svg"
-          width="48"
-          height="48"
-          alt=""
-          class="hidden sm:block rounded-xl shrink-0"
-          aria-hidden="true"
-        />
-        <div>
-          <h2 id="cta-titulo" class="text-2xl">
-            ¿Listo para digitalizar tu negocio?
-          </h2>
-          <p class="mt-2 text-muted">
-            Platiquemos sobre tus retos operativos y diseñemos una solución a tu medida.
-          </p>
-        </div>
+  <!-- Banda final con el fondo decorado: va sobre --color-bg, no dentro de una tarjeta,
+       porque sobre navy-surface el destello bajaría el contraste del texto. -->
+  <section class="bg-tech border-y border-border" aria-labelledby="cta-titulo">
+    <div class="container-site py-20 text-center md:py-24" data-reveal>
+      <img
+        src="/brand/Icono.svg"
+        width="64"
+        height="64"
+        alt=""
+        class="float mx-auto rounded-2xl"
+        aria-hidden="true"
+      />
+      <h2 id="cta-titulo" class="mx-auto mt-6 max-w-2xl text-3xl md:text-5xl">
+        ¿Listo para digitalizar tu negocio?
+      </h2>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-muted">
+        Platiquemos sobre tus retos operativos y diseñemos una solución a tu medida.
+      </p>
+      <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+        <a href="/contacto" class="btn-cta">
+          Pide una demo
+        </a>
+        <a href="/producto-pos" class="btn-secondary">
+          Conoce el POS
+        </a>
       </div>
-      <a href="/contacto" class="btn-cta mt-6 md:mt-0 shrink-0">
-        Pide una demo
-      </a>
     </div>
   </section>
 </BaseLayout>

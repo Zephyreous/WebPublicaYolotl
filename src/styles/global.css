@@ -49,6 +49,13 @@
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
+  --radius-full: 999px;
+
+  /* Movimiento. Todo se desactiva con prefers-reduced-motion. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 700ms;
 
   /* Logo: área de respeto = altura de la "o" del wordmark.
      Calibrado con el SVG oficial (aprox. 0.22 de la altura del logo completo). */
@@ -76,6 +83,14 @@
   --color-cta-bg-hover: var(--yolotl-orange-hover);
   --color-cta-text: var(--yolotl-navy);
   --color-error: var(--yolotl-orange);
+  /* Botón secundario relleno al pasar el cursor. */
+  --color-secondary-hover-bg: var(--yolotl-teal);
+  --color-secondary-hover-text: var(--yolotl-navy);
+  /* Decoración de fondo (retícula y destellos). Opacidad acotada por la prueba de contraste. */
+  --glow-teal: color-mix(in srgb, var(--yolotl-teal) 8%, transparent);
+  --glow-orange: color-mix(in srgb, var(--yolotl-orange) 8%, transparent);
+  --grid-line: color-mix(in srgb, var(--yolotl-slate) 5%, transparent);
+  --color-text-on-decor: var(--yolotl-slate-light);
 }
 
 /*
@@ -98,6 +113,13 @@
   --color-cta-bg-hover: var(--yolotl-orange-hover);
   --color-cta-text: var(--yolotl-navy);
   --color-error: var(--yolotl-navy);
+  --color-secondary-hover-bg: var(--yolotl-navy);
+  --color-secondary-hover-text: var(--yolotl-ivory);
+  --glow-teal: color-mix(in srgb, var(--yolotl-teal) 10%, transparent);
+  --glow-orange: color-mix(in srgb, var(--yolotl-orange) 10%, transparent);
+  --grid-line: color-mix(in srgb, var(--yolotl-slate) 10%, transparent);
+  /* Sobre el fondo decorado el slate oscurecido ya no llega a 4.5:1; se usa navy. */
+  --color-text-on-decor: var(--yolotl-navy);
 }
 
 /* Sin JavaScript (o sin data-theme), se respeta la preferencia del sistema. */
@@ -117,6 +139,13 @@
     --color-cta-bg-hover: var(--yolotl-orange-hover);
     --color-cta-text: var(--yolotl-navy);
     --color-error: var(--yolotl-navy);
+    --color-secondary-hover-bg: var(--yolotl-navy);
+    --color-secondary-hover-text: var(--yolotl-ivory);
+    --glow-teal: color-mix(in srgb, var(--yolotl-teal) 10%, transparent);
+    --glow-orange: color-mix(in srgb, var(--yolotl-orange) 10%, transparent);
+    --grid-line: color-mix(in srgb, var(--yolotl-slate) 10%, transparent);
+    /* Sobre el fondo decorado el slate oscurecido ya no llega a 4.5:1; se usa navy. */
+    --color-text-on-decor: var(--yolotl-navy);
   }
 }
 
@@ -208,43 +237,86 @@
    * Navy sobre orange-hover da 4.11:1, así que el texto va en 19px y negrita
    * para contar como texto grande (umbral AA de 3:1).
    */
-  .btn-cta {
+  .btn-cta,
+  .btn-secondary {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: var(--space-2);
     min-height: 3rem;
     padding: var(--space-3) var(--space-6);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-full);
+    font-family: var(--font-sans);
+    text-decoration: none;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      background-color var(--duration-base) var(--ease-out),
+      color var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out);
+  }
+
+  .btn-cta {
     background-color: var(--color-cta-bg);
     color: var(--color-cta-text);
-    font-family: var(--font-sans);
     font-size: 1.1875rem;
     font-weight: 700;
-    text-decoration: none;
-    transition: background-color 150ms ease;
+  }
+
+  /* Flecha que avanza al pasar el cursor; hereda el color del texto. */
+  .btn-cta::after {
+    content: '';
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition: transform var(--duration-base) var(--ease-out);
   }
 
   .btn-cta:hover {
     background-color: var(--color-cta-bg-hover);
+    transform: translateY(-2px);
+  }
+
+  .btn-cta:hover::after {
+    transform: translateX(4px);
   }
 
   .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 3rem;
-    padding: var(--space-3) var(--space-6);
     border: 2px solid var(--color-border-accent);
-    border-radius: var(--radius-md);
     color: var(--color-text);
     font-weight: 600;
-    text-decoration: none;
-    transition: border-color 150ms ease;
+  }
+
+  /* Relleno que barre de izquierda a derecha. */
+  .btn-secondary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--color-secondary-hover-bg);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-base) var(--ease-out);
   }
 
   .btn-secondary:hover {
-    text-decoration: underline;
+    border-color: var(--color-secondary-hover-bg);
+    color: var(--color-secondary-hover-text);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary:hover::before {
+    transform: scaleX(1);
+  }
+
+  .btn-cta:active,
+  .btn-secondary:active {
+    transform: translateY(0) scale(0.98);
   }
 
   .card {
@@ -254,9 +326,185 @@
     padding: var(--space-6);
   }
 
+  /* Tarjeta interactiva: se eleva y resalta el borde. Sin sombras (manual de marca). */
+  .card-hover {
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out);
+  }
+
+  .card-hover:hover,
+  .card-hover:focus-within {
+    transform: translateY(-4px);
+    border-color: var(--color-border-accent);
+  }
+
+  .card-hover .card-media {
+    overflow: hidden;
+  }
+
+  .card-hover .card-media img {
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .card-hover:hover .card-media img {
+    transform: scale(1.04);
+  }
+
+  /* Icono de tarjeta: el colibrí "aletea" al pasar el cursor sobre la tarjeta. */
+  .icon-chip {
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      border-color var(--duration-base) var(--ease-out);
+  }
+
+  .card-hover:hover .icon-chip {
+    transform: rotate(-8deg) scale(1.1);
+    border-color: var(--color-border-accent);
+  }
+
+  /* Enlace con flecha: "Ver todos los casos →". */
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    text-decoration: none;
+    background: linear-gradient(var(--color-border-accent), var(--color-border-accent)) left
+      bottom / 0% 2px no-repeat;
+    transition: background-size var(--duration-base) var(--ease-out);
+  }
+
+  .link-arrow::after {
+    content: '→';
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .link-arrow:hover {
+    background-size: 100% 2px;
+  }
+
+  .link-arrow:hover::after {
+    transform: translateX(4px);
+  }
+
+  /*
+   * Fondo tecnológico: retícula tenue + dos destellos (turquesa y naranja) que se mueven lento.
+   * Las opacidades (--glow-*, --grid-line) están verificadas en tests/contrast.test.ts
+   * para que el texto secundario siga en AA en el punto más intenso.
+   */
+  .bg-tech {
+    --color-text-muted: var(--color-text-on-decor);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .bg-tech::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 70% at 70% 30%, black 20%, transparent 75%);
+  }
+
+  .bg-tech::after {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    z-index: -2;
+    background:
+      radial-gradient(circle at 80% 20%, var(--glow-teal), transparent 40%),
+      radial-gradient(circle at 15% 85%, var(--glow-orange), transparent 35%);
+  }
+
+  /* Contenido que aparece al entrar en pantalla (lo activa el script de BaseLayout). */
+  @media (prefers-reduced-motion: no-preference) {
+    html.js [data-reveal] {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity var(--duration-slow) var(--ease-out),
+        transform var(--duration-slow) var(--ease-out);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    html.js [data-reveal].is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Escalonado dentro de rejillas de tarjetas. */
+    [data-reveal]:nth-child(2) {
+      --reveal-delay: 100ms;
+    }
+
+    [data-reveal]:nth-child(3) {
+      --reveal-delay: 200ms;
+    }
+
+    /* Entrada del hero al cargar. */
+    .hero-enter > * {
+      animation: fade-up var(--duration-slow) var(--ease-out) both;
+    }
+
+    .hero-enter > :nth-child(2) {
+      animation-delay: 80ms;
+    }
+
+    .hero-enter > :nth-child(3) {
+      animation-delay: 160ms;
+    }
+
+    .hero-enter > :nth-child(4) {
+      animation-delay: 240ms;
+    }
+
+    .float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .bg-tech::after {
+      animation: glow-drift 18s ease-in-out infinite alternate;
+    }
+  }
+
   .todo {
     font-family: var(--font-mono);
     font-size: 0.875rem;
     color: var(--color-text-muted);
   }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow-drift {
+  to {
+    transform: translate3d(-6%, 4%, 0) rotate(8deg);
+  }
+}
+
+/*
+ * Cambio de tema con onda: Header.astro anima ::view-transition-new(root) con clip-path.
+ * Se apaga la animación por defecto (fundido) para que solo se vea la onda.
+ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }

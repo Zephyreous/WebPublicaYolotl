@@ -7,7 +7,7 @@
  * - Sin sombras, biseles ni efectos neón, preservando proporciones originales.
  */
 interface Props {
-  /** auto: positivo en tema claro y negativo en tema oscuro. */
+  /** auto e isotipo cambian con el tema; positivo, negativo e icono son fijos. */
   variant?: 'auto' | 'positivo' | 'negativo' | 'isotipo' | 'icono';
   /** Ancho en px del logo completo o del icono/isotipo. */
   width?: number;
@@ -38,25 +38,31 @@ const isSquare = useIsotipo || useIcono;
 const w = isSquare ? Math.max(width, MIN_ISOTIPO) : width;
 const h = isSquare ? w : Math.round(w * FULL_RATIO);
 const clearspace = withClearspace ? Math.round(h * CLEARSPACE_RATIO) : 0;
+
+// [fondo oscuro, fondo claro]. El isotipo también cambia: el ala izquierda es Blanco Hueso
+// en la versión oscura y se perdería sobre ivory.
+const [srcDark, srcLight] = useIcono
+  ? ['/brand/Icono.svg', '/brand/Icono.svg']
+  : useIsotipo
+    ? ['/brand/isotipo.svg', '/brand/isotipo-light.svg']
+    : variant === 'negativo'
+      ? ['/brand/Log+TextDark.svg', '/brand/Log+TextDark.svg']
+      : variant === 'positivo'
+        ? ['/brand/Log+TextLight.svg', '/brand/Log+TextLight.svg']
+        : ['/brand/Log+TextDark.svg', '/brand/Log+TextLight.svg'];
 ---
 
 <span
   class:list={['logo', className]}
   style={clearspace > 0 ? `padding: ${clearspace}px;` : undefined}
 >
-  {useIcono ? (
-    <img src="/brand/Icono.svg" width={w} height={h} alt={alt} />
-  ) : useIsotipo ? (
-    <img src="/brand/Isotipo.svg" width={w} height={h} alt={alt} />
-  ) : variant === 'auto' ? (
-    <>
-      <img class="logo-on-dark" src="/brand/Log+TextDark.svg" width={w} height={h} alt={alt} />
-      <img class="logo-on-light" src="/brand/Log+TextLight.svg" width={w} height={h} alt={alt} />
-    </>
-  ) : variant === 'negativo' ? (
-    <img src="/brand/Log+TextDark.svg" width={w} height={h} alt={alt} />
+  {srcDark === srcLight ? (
+    <img src={srcDark} width={w} height={h} alt={alt} />
   ) : (
-    <img src="/brand/Log+TextLight.svg" width={w} height={h} alt={alt} />
+    <>
+      <img class="logo-on-dark" src={srcDark} width={w} height={h} alt={alt} />
+      <img class="logo-on-light" src={srcLight} width={w} height={h} alt={alt} />
+    </>
   )}
 </span>
 

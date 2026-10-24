@@ -1,4 +1,6 @@
 ---
+import Logo from './Logo.astro';
+
 interface Props {
   title: string;
   subtitle: string;
@@ -11,64 +13,41 @@ const { title, subtitle, badge, cta, secondary } = Astro.props;
 const hasVisual = Astro.slots.has('visual');
 ---
 
-<section class="border-b border-border">
-  <div class="container-site py-16 md:py-24">
-    {hasVisual ? (
-      <div class="grid items-center gap-12 lg:grid-cols-12">
-        <div class="lg:col-span-7">
-          {badge && (
-            <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-medium">
-              <img src="/brand/Isotipo.svg" width="20" height="20" alt="" aria-hidden="true" />
-              <span>{badge}</span>
-            </div>
+<section class="bg-tech border-b border-border">
+  <div
+    class:list={[
+      'container-site py-16 md:py-24',
+      hasVisual && 'grid items-center gap-12 lg:grid-cols-12',
+    ]}
+  >
+    <div class:list={['hero-enter', hasVisual ? 'lg:col-span-7' : 'max-w-3xl']}>
+      {badge && (
+        <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-medium">
+          <Logo variant="isotipo" width={20} withClearspace={false} alt="" />
+          <span>{badge}</span>
+        </p>
+      )}
+      <h1 class="text-4xl md:text-6xl">{title}</h1>
+      <p class="mt-6 max-w-2xl text-lg text-muted">{subtitle}</p>
+      {(cta || secondary) && (
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          {cta && (
+            <a href={cta.href} class="btn-cta">
+              {cta.label}
+            </a>
           )}
-          <h1 class="text-4xl md:text-6xl">{title}</h1>
-          <p class="mt-6 text-lg text-muted">{subtitle}</p>
-          {(cta || secondary) && (
-            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-              {cta && (
-                <a href={cta.href} class="btn-cta">
-                  {cta.label}
-                </a>
-              )}
-              {secondary && (
-                <a href={secondary.href} class="btn-secondary">
-                  {secondary.label}
-                </a>
-              )}
-            </div>
+          {secondary && (
+            <a href={secondary.href} class="btn-secondary">
+              {secondary.label}
+            </a>
           )}
-          <slot />
         </div>
-        <div class="lg:col-span-5">
-          <slot name="visual" />
-        </div>
-      </div>
-    ) : (
-      <div>
-        {badge && (
-          <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-medium">
-            <img src="/brand/Isotipo.svg" width="20" height="20" alt="" aria-hidden="true" />
-            <span>{badge}</span>
-          </div>
-        )}
-        <h1 class="max-w-3xl text-4xl md:text-6xl">{title}</h1>
-        <p class="mt-6 max-w-2xl text-lg text-muted">{subtitle}</p>
-        {(cta || secondary) && (
-          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-            {cta && (
-              <a href={cta.href} class="btn-cta">
-                {cta.label}
-              </a>
-            )}
-            {secondary && (
-              <a href={secondary.href} class="btn-secondary">
-                {secondary.label}
-              </a>
-            )}
-          </div>
-        )}
-        <slot />
+      )}
+      <slot />
+    </div>
+    {hasVisual && (
+      <div class="hero-enter lg:col-span-5">
+        <slot name="visual" />
       </div>
     )}
   </div>

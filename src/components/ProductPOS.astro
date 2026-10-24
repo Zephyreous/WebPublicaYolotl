@@ -1,4 +1,5 @@
 ---
+import Logo from './Logo.astro';
 import { Image } from 'astro:assets';
 import ventaImg from '@/assets/placeholders/pos-punto-de-venta.png';
 import inventarioImg from '@/assets/placeholders/pos-inventario.png';
@@ -39,18 +40,19 @@ const modules = [
 
 <div class="grid gap-6 md:grid-cols-3">
   {modules.map((module) => (
-    <article class="card flex flex-col">
+    <article class="card card-hover flex flex-col" data-reveal>
       {!compact ? (
-        <Image
-          src={module.image}
-          alt={module.alt}
-          widths={[400, 800]}
-          sizes="(min-width: 768px) 33vw, 100vw"
-          class="mb-4 rounded-md"
-        />
+        <div class="card-media mb-4 rounded-md">
+          <Image
+            src={module.image}
+            alt={module.alt}
+            widths={[400, 800]}
+            sizes="(min-width: 768px) 33vw, 100vw"
+          />
+        </div>
       ) : (
-        <div class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-bg">
-          <img src="/brand/Isotipo.svg" width="22" height="22" alt="" aria-hidden="true" />
+        <div class="icon-chip mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-bg">
+          <Logo variant="isotipo" width={22} withClearspace={false} alt="" />
         </div>
       )}
       <Heading class="text-xl">{module.title}</Heading>

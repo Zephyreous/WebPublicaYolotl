@@ -7,7 +7,7 @@ const isActive = (href: string) =>
   href === '/' ? current === '/' : current === href || current.startsWith(`${href}/`);
 ---
 
-<header class="sticky top-0 z-50 border-b border-border bg-bg">
+<header class="site-header sticky top-0 z-50 border-b border-border">
   <a
     href="#contenido"
     class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-4 focus:z-50 focus:rounded-md focus:bg-bg focus:p-2"
@@ -51,10 +51,7 @@ const isActive = (href: string) =>
           <li>
             <a
               href={href}
-              class:list={[
-                'nav-link block border-b-2 py-3 font-medium text-fg no-underline',
-                isActive(href) ? 'border-border-accent' : 'border-transparent',
-              ]}
+              class="nav-link relative block py-3 font-medium text-fg no-underline"
               aria-current={isActive(href) ? 'page' : undefined}
             >
               {label}
@@ -70,36 +67,175 @@ const isActive = (href: string) =>
       data-theme-toggle
       aria-label="Cambiar tema de color"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        width="20"
-        height="20"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        aria-hidden="true"
-      >
-        <circle cx="12" cy="12" r="5"></circle>
-        <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+      <!-- Sol en tema claro, luna en tema oscuro. La luna es el mismo círculo, más grande,
+           con un recorte que se desliza encima; los rayos giran y se ocultan. -->
+      <svg class="theme-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <mask id="theme-icon-mask">
+          <rect width="24" height="24" fill="white"></rect>
+          <circle class="theme-icon-cut" cx="17" cy="7" r="6" fill="black"></circle>
+        </mask>
+        <g mask="url(#theme-icon-mask)">
+          <circle class="theme-icon-core" cx="12" cy="12" r="5" fill="currentColor"></circle>
+        </g>
+        <g
+          class="theme-icon-rays"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="M12 1.5v2M12 20.5v2M4.6 4.6 6 6M18 18l1.4 1.4M1.5 12h2M20.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"></path>
+        </g>
       </svg>
     </button>
   </div>
+  <div class="scroll-progress" aria-hidden="true"></div>
 </header>
 
 <style>
-  .border-border-accent {
-    border-color: var(--color-border-accent);
+  /* Translúcido con desenfoque. 90% de opacidad mantiene el contraste del menú. */
+  .site-header {
+    background-color: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    backdrop-filter: blur(12px);
   }
 
-  .nav-link:hover {
-    border-color: var(--color-border-accent);
+  /* Subrayado que crece desde el centro; fijo en la página actual. */
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0.5rem;
+    left: 0;
+    height: 2px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-border-accent);
+    transform: scaleX(0);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+
+  .nav-link:hover::after,
+  .nav-link[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  /* Barra de progreso de lectura, sin JS (scroll-driven animations). */
+  .scroll-progress {
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background-color: var(--color-border-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .scroll-progress {
+        animation: progress linear both;
+        animation-timeline: scroll(root);
+      }
+    }
+  }
+
+  @keyframes progress {
+    to {
+      transform: scaleX(1);
+    }
   }
 
   /* Con JS el menú móvil empieza plegado; sin JS queda visible. */
   @media (max-width: 767px) {
     :global(html.js) .menu:not([data-open]) {
       display: none;
+    }
+  }
+
+  .theme-toggle {
+    position: relative;
+  }
+
+  .theme-icon-core,
+  .theme-icon-cut,
+  .theme-icon-rays {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* Tema oscuro (predeterminado): luna. */
+  .theme-icon-core {
+    transform: scale(1.7);
+  }
+
+  .theme-icon-cut {
+    transform: translate(0, 0);
+  }
+
+  .theme-icon-rays {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.4);
+  }
+
+  /* Tema claro: sol. El recorte sale del círculo y los rayos aparecen girando. */
+  :global(:root[data-theme='light']) .theme-icon-core {
+    transform: scale(1);
+  }
+
+  :global(:root[data-theme='light']) .theme-icon-cut {
+    transform: translate(9px, -9px);
+  }
+
+  :global(:root[data-theme='light']) .theme-icon-rays {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .theme-icon-core,
+    .theme-icon-cut {
+      transition: transform 600ms var(--ease-out);
+    }
+
+    .theme-icon-rays {
+      transition:
+        transform 600ms var(--ease-out),
+        opacity 300ms var(--ease-out);
+    }
+
+    .theme-icon {
+      transition: transform 600ms var(--ease-out);
+    }
+
+    :global(:root[data-theme='light']) .theme-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Anillo que sale del botón al hacer clic, como una gota en el agua. */
+    .theme-toggle::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 2px solid var(--color-border-accent);
+      border-radius: var(--radius-full);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .theme-toggle.is-splashing::after {
+      animation: splash 700ms var(--ease-out);
+    }
+  }
+
+  @keyframes splash {
+    from {
+      opacity: 1;
+      transform: scale(0.6);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(2.4);
     }
   }
 </style>
@@ -138,15 +274,54 @@ const isActive = (href: string) =>
     themeToggle?.setAttribute('aria-label', `Cambiar a modo ${next}`);
   }
 
-  themeToggle?.addEventListener('click', () => {
-    const next = currentTheme() === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
+  function applyTheme(theme: 'dark' | 'light') {
+    document.documentElement.dataset.theme = theme;
     try {
-      localStorage.setItem('yolotl-theme', next);
+      localStorage.setItem('yolotl-theme', theme);
     } catch {
       // Sin almacenamiento disponible: el cambio dura solo esta página.
     }
     updateThemeLabel();
+  }
+
+  themeToggle?.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Sin View Transitions o con movimiento reducido, el cambio es instantáneo.
+    if (!document.startViewTransition || reduceMotion) {
+      applyTheme(next);
+      return;
+    }
+
+    // Salpicadura del botón: se reinicia la animación en cada clic.
+    themeToggle.classList.remove('is-splashing');
+    void themeToggle.offsetWidth;
+    themeToggle.classList.add('is-splashing');
+
+    // La onda nace en el centro del botón y crece hasta la esquina más lejana.
+    const rect = themeToggle.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    const at = `at ${x}px ${y}px`;
+
+    const transition = document.startViewTransition(() => applyTheme(next));
+    transition.ready
+      .then(() => {
+        // "Drop": primero se forma una gota y luego se expande por toda la página.
+        document.documentElement.animate(
+          [
+            { clipPath: `circle(0px ${at})`, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
+            { clipPath: `circle(28px ${at})`, offset: 0.2, easing: 'cubic-bezier(0.7, 0, 0.2, 1)' },
+            { clipPath: `circle(${radius}px ${at})` },
+          ],
+          { duration: 900, pseudoElement: '::view-transition-new(root)' },
+        );
+      })
+      .catch(() => {
+        // Si la transición se cancela, el tema ya quedó aplicado.
+      });
   });
 
   updateThemeLabel();

@@ -81,15 +81,41 @@ clases `bg-bg`, `text-fg`, `text-muted`, `bg-cta`…) que cambian según `data-t
   (19px en negrita), por eso cumple AA.
 - `npm test` lee `global.css` y falla si algún par texto/fondo usado en el diseño no cumple AA.
 
+### Movimiento y efectos
+
+Utilidades en `src/styles/global.css` (sin sombras, biseles ni neón, según el manual):
+
+| Clase / atributo              | Efecto                                                                                              |
+| ----------------------------- | --------------------------------------------------------------------------------------------------- |
+| `.bg-tech`                    | Fondo con retícula tenue y destellos turquesa/naranja que se mueven lento. Solo sobre `--color-bg`. |
+| `[data-reveal]`               | Aparece al entrar en pantalla (escalonado dentro de rejillas).                                      |
+| `.hero-enter`                 | Entrada escalonada de los hijos al cargar.                                                          |
+| `.float`                      | Flotación suave (Banner, icono del CTA final).                                                      |
+| `.card-hover`                 | La tarjeta se eleva y resalta el borde; `.card-media` hace zoom en la imagen.                       |
+| `.link-arrow`                 | Enlace con subrayado que crece y flecha que avanza.                                                 |
+| `.btn-cta` / `.btn-secondary` | Píldoras; flecha animada en el CTA, relleno en el secundario.                                       |
+
+Todo se desactiva con `prefers-reduced-motion: reduce`. El texto dentro de `.bg-tech` usa
+`--color-text-on-decor`, y `npm test` verifica su contraste sobre el punto más intenso del destello.
+
+El carrusel de casos (`CaseCarousel.astro`) usa scroll-snap nativo (funciona sin JS) y añade botones,
+puntos y flechas del teclado. No tiene reproducción automática a propósito (WCAG 2.2.2).
+
 ### Tema
 
 `data-theme` en `<html>`: la preferencia guardada (botón del header) manda; si no hay, la página de inicio usa el
 modo oscuro y las demás siguen `prefers-color-scheme`. Sin JavaScript se aplica `prefers-color-scheme`.
 
+Al cambiar de tema, el ícono se transforma entre luna y sol, y el tema nuevo se expande como una onda
+circular desde el botón (View Transition API, en `Header.astro`). En navegadores sin soporte o con
+`prefers-reduced-motion: reduce`, el cambio es instantáneo.
+
 ### Logo e Identidad
 
 - Archivos oficiales en `public/brand/`:
-  - `Isotipo.svg`: Colibrí geométrico (200×200px) con el nodo central y alas vectoriales.
+  - `isotipo.svg`: Colibrí geométrico (200×200px) para fondos oscuros.
+  - `isotipo-light.svg`: Misma pieza para fondos claros (el ala izquierda va en Azul Noche en lugar de Blanco Hueso,
+    como en `Log+TextLight.svg`). `Logo.astro` alterna ambas según el tema.
   - `Icono.svg`: Emblema en fondo Azul Noche (`#0D1F38`, 512×512px con esquinas redondeadas) para app icon y favicon.
   - `Log+TextDark.svg` / `logo-dark.svg`: Isotipo + wordmark YOLOTL para fondos oscuros.
   - `Log+TextLight.svg` / `logo-light.svg`: Isotipo + wordmark YOLOTL para fondos claros.
@@ -97,7 +123,9 @@ modo oscuro y las demás siguen `prefers-color-scheme`. Sin JavaScript se aplica
 - Ancho mínimo del logo completo: 110px; por debajo, `Logo.astro` conmuta automáticamente al isotipo.
 - Área de respeto: calibrada con la altura de la «O» del wordmark (`CLEARSPACE_RATIO = 0.22` en `Logo.astro` y `global.css`).
 - Prohibido: sombras, biseles, neón, deformar la proporción o rellenar el círculo central.
-  `tests/brand-rules.test.ts` impide sombras en el código.
+  `tests/brand-rules.test.ts` impide sombras en el código y verifica que toda ruta `/brand/...` exista con las
+  mayúsculas exactas (en Linux `Isotipo.svg` ≠ `isotipo.svg`).
+- Para mostrar el isotipo usa `<Logo variant="isotipo" />` en lugar de un `<img>` directo, así cambia con el tema.
 
 ## Dominio y subdominios
 

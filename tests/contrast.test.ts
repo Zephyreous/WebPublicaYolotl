@@ -41,16 +41,58 @@ const dark = findBlock((s) => s.includes(":root[data-theme='dark']"));
 const light = findBlock((s) => s === ":root[data-theme='light']");
 const lightNoJs = findBlock((s) => s === ':root:not([data-theme])');
 
-function resolve(value: string, theme: Vars): string {
+interface Rgba {
+  hex: string;
+  alpha: number;
+}
+
+/** Resuelve var(), hex y color-mix(in srgb, <color> N%, transparent). */
+function resolveRgba(value: string, theme: Vars): Rgba {
   const ref = value.match(/^var\((--[\w-]+)\)$/);
   if (ref) {
     const name = ref[1]!;
     const next = theme[name] ?? brand[name];
     if (!next) throw new Error(`Variable sin definir: ${name}`);
-    return resolve(next, theme);
+    return resolveRgba(next, theme);
+  }
+  const mix = value.match(/^color-mix\(in srgb,\s*(.+?)\s+([\d.]+)%,\s*transparent\)$/);
+  if (mix) {
+    const base = resolveRgba(mix[1]!, theme);
+    return { hex: base.hex, alpha: base.alpha * (Number(mix[2]) / 100) };
   }
   if (!/^#[0-9a-f]{6}$/i.test(value)) throw new Error(`Color no soportado: ${value}`);
-  return value.toUpperCase();
+  return { hex: value.toUpperCase(), alpha: 1 };
+}
+
+function resolve(value: string, theme: Vars): string {
+  const { hex, alpha } = resolveRgba(value, theme);
+  if (alpha !== 1) throw new Error(`Color translúcido sin fondo: ${value}`);
+  return hex;
+}
+
+/**
+ * Fondo compuesto: 'base+capa1+capa2' (de abajo hacia arriba), p. ej. el fondo
+ * con un destello y la retícula encima. Devuelve el color opaco resultante.
+ */
+function resolveBackground(spec: string, theme: Vars): string {
+  const [base, ...layers] = spec.split('+');
+  let rgb = channels(resolve(`var(${base})`, theme));
+  for (const layer of layers) {
+    const { hex, alpha } = resolveRgba(`var(${layer})`, theme);
+    const top = channels(hex);
+    rgb = rgb.map((c, i) => c * (1 - alpha) + top[i]! * alpha);
+  }
+  return (
+    '#' +
+    rgb
+      .map((c) => Math.round(c).toString(16).padStart(2, '0'))
+      .join('')
+      .toUpperCase()
+  );
+}
+
+function channels(hex: string): number[] {
+  return [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 }
 
 function luminance(hex: string): number {
@@ -89,6 +131,34 @@ const SEMANTIC_PAIRS: [string, string, number, string][] = [
   ['--color-cta-text', '--color-cta-bg', NORMAL, 'texto del botón CTA'],
   // .btn-cta usa 19px negrita (texto grande), por eso basta 3:1 en hover.
   ['--color-cta-text', '--color-cta-bg-hover', LARGE, 'texto del botón CTA en hover'],
+  [
+    '--color-secondary-hover-text',
+    '--color-secondary-hover-bg',
+    NORMAL,
+    'botón secundario en hover',
+  ],
+  // Fondo .bg-tech (solo sobre --color-bg) en su punto más intenso: destello + retícula.
+  // Dentro de .bg-tech el texto secundario usa --color-text-on-decor.
+  [
+    '--color-text-on-decor',
+    '--color-bg+--glow-teal+--grid-line',
+    NORMAL,
+    'texto secundario sobre destello turquesa',
+  ],
+  [
+    '--color-text-on-decor',
+    '--color-bg+--glow-orange+--grid-line',
+    NORMAL,
+    'texto secundario sobre destello naranja',
+  ],
+  ['--color-text', '--color-bg+--glow-teal+--grid-line', NORMAL, 'texto principal sobre destello'],
+  ['--color-accent', '--color-bg+--glow-orange+--grid-line', NORMAL, 'enlaces sobre destello'],
+  [
+    '--color-border-accent',
+    '--color-bg+--glow-teal+--grid-line',
+    UI,
+    'borde del botón secundario sobre destello',
+  ],
 ];
 
 /** Pares fijos (no dependen del tema). */
@@ -101,7 +171,7 @@ const FIXED_PAIRS: [string, string, number, string][] = [
 function evaluate(pairs: typeof SEMANTIC_PAIRS, theme: Vars, label: string) {
   return pairs.map(([fg, bg, min, usage]) => {
     const fgHex = resolve(`var(${fg})`, theme);
-    const bgHex = resolve(`var(${bg})`, theme);
+    const bgHex = resolveBackground(bg, theme);
     const ratio = contrast(fgHex, bgHex);
     return {
       tema: label,

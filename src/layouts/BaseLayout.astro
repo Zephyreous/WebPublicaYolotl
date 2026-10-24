@@ -53,7 +53,7 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     <SEO title={title} description={description} noindex={noindex} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/brand/Icono.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#0D1F38" />
 
     <!-- Fuentes desde Google Fonts con font-display: swap. -->
@@ -92,5 +92,26 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     </main>
     <Footer />
     <WhatsAppButton />
+
+    <script>
+      // Aparición al hacer scroll: [data-reveal] recibe .is-visible al entrar en pantalla.
+      // El CSS solo oculta esos elementos con JS activo y sin prefers-reduced-motion.
+      const targets = document.querySelectorAll('[data-reveal]');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+        );
+        targets.forEach((el) => observer.observe(el));
+      } else {
+        targets.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
   </body>
 </html>
