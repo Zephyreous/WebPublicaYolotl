@@ -2,6 +2,7 @@
 import '@/styles/global.css';
 import { Font } from 'astro:assets';
 import { ClientRouter } from 'astro:transitions';
+import Analytics from '@vercel/analytics/astro';
 import SEO from '@/components/SEO.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
@@ -98,6 +99,13 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     </main>
     <Footer />
     <WhatsAppButton />
+
+    <!--
+      Vercel Web Analytics (sin cookies). Va en el <body>, que se reemplaza al navegar:
+      así registra también las visitas por ClientRouter. Script y envíos son del mismo dominio
+      (/_vercel/insights), cubiertos por 'self' en la CSP.
+    -->
+    <Analytics />
 
     <script>
       import { initMagnetic } from '@/scripts/magnetic';

@@ -61,6 +61,8 @@ upgrade-insecure-requests
 
 - **Fuentes:** alojadas en el sitio (`fonts` en `astro.config.mjs`). Los visitantes no hacen peticiones a
   Google, lo que evita compartir su IP (LFPDPPP) y permite `font-src 'self'`.
+- **Vercel Web Analytics:** sin cookies. El script (`/_vercel/insights/script.js`) y los envíos se
+  sirven desde el propio dominio, así que la CSP no necesita hosts adicionales.
 - **Plausible:** analítica sin cookies ni datos personales. Solo se carga si `PUBLIC_PLAUSIBLE_DOMAIN`
   tiene valor. No admite SRI porque el script se actualiza en el servidor de Plausible.
 - **Web3Forms:** recibe los datos del formulario. La clave `PUBLIC_WEB3FORMS_KEY` es pública por
