@@ -1,6 +1,6 @@
 # Yolotl Labs: sitio web
 
-Sitio estático de Yolotl Labs hecho con Astro 7, TypeScript estricto y Tailwind CSS 4.
+Sitio estático de Yolotl Labs hecho con Astro 7, TypeScript estricto y Tailwind CSS 4, desplegado en Vercel.
 
 ## Requisitos
 
@@ -20,9 +20,13 @@ npm run check          # verificación de tipos (astro check)
 npm run lint           # ESLint (incluye reglas de accesibilidad jsx-a11y)
 npm run format         # Prettier
 npm run test:e2e       # Playwright (pendiente de configurar, ver tests/example.spec.ts)
+npm run verify:csp     # comprueba que la CSP de vercel.json cubra dist/ (después de build)
 ```
 
-La CI (`.github/workflows/ci.yml`) ejecuta formato, lint, tipos, pruebas y build en cada push y pull request.
+La CI (`.github/workflows/ci.yml`) ejecuta auditoría de dependencias, formato, lint, tipos, pruebas, build
+y verificación de la CSP en cada push y pull request.
+
+El build descarga las fuentes de Google una vez (necesita red) y las sirve desde el propio sitio.
 
 ## Variables de entorno
 
@@ -37,14 +41,18 @@ La CI (`.github/workflows/ci.yml`) ejecuta formato, lint, tipos, pruebas y build
 src/
   components/   Header, Footer, Hero, ServiceCard, ProductPOS, CaseCard, TeamCard,
                 ContactForm, WhatsAppButton, SEO, Logo
-  layouts/      BaseLayout.astro (head, fuentes, meta tags, tema, analítica)
+  layouts/      BaseLayout.astro (head, fuentes, meta tags, tema, analítica, loader, ClientRouter)
   pages/        una ruta por archivo
+  scripts/      módulos del navegador: loader, navegación, aparición, botones magnéticos, tema
   content/      servicios/*.md y casos/*.md (esquemas en src/content.config.ts)
   styles/       global.css: tokens de color, tipografía, espaciado y radios
-  lib/          site.ts (datos centralizados) y seo.ts (título y descripción por página)
+  lib/          site.ts (datos centralizados), seo.ts (título y descripción por página),
+                transitions.ts (animación entre páginas)
   assets/       imágenes de marcador procesadas por <Image> de Astro
 public/brand/   logos SVG (actualmente marcadores)
 tests/          contrast.test.ts, brand-rules.test.ts, example.spec.ts
+scripts/        verify-csp.mjs (CI)
+vercel.json     cabeceras de seguridad y caché
 ```
 
 Los datos de la empresa (correo, WhatsApp, redes, dominio) se editan **solo** en `src/lib/site.ts`.
@@ -85,18 +93,28 @@ clases `bg-bg`, `text-fg`, `text-muted`, `bg-cta`…) que cambian según `data-t
 
 Utilidades en `src/styles/global.css` (sin sombras, biseles ni neón, según el manual):
 
-| Clase / atributo              | Efecto                                                                                              |
-| ----------------------------- | --------------------------------------------------------------------------------------------------- |
-| `.bg-tech`                    | Fondo con retícula tenue y destellos turquesa/naranja que se mueven lento. Solo sobre `--color-bg`. |
-| `[data-reveal]`               | Aparece al entrar en pantalla (escalonado dentro de rejillas).                                      |
-| `.hero-enter`                 | Entrada escalonada de los hijos al cargar.                                                          |
-| `.float`                      | Flotación suave (Banner, icono del CTA final).                                                      |
-| `.card-hover`                 | La tarjeta se eleva y resalta el borde; `.card-media` hace zoom en la imagen.                       |
-| `.link-arrow`                 | Enlace con subrayado que crece y flecha que avanza.                                                 |
-| `.btn-cta` / `.btn-secondary` | Píldoras; flecha animada en el CTA, relleno en el secundario.                                       |
+| Clase / atributo              | Efecto                                                                                                                     |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `.bg-tech`                    | Fondo con retícula tenue y destellos turquesa/naranja que se mueven lento. Solo sobre `--color-bg`.                        |
+| `[data-reveal]`               | Aparece al entrar en pantalla. Variantes: (vacío) sube, `scale`, `left`, `right`, `blur`. Los hermanos se escalonan solos. |
+| `.hero-enter`                 | Entrada escalonada de los hijos al cargar.                                                                                 |
+| `.float`                      | Flotación suave (Banner, icono del CTA final).                                                                             |
+| `.card-hover`                 | La tarjeta se eleva y resalta el borde; `.card-media` hace zoom en la imagen.                                              |
+| `.link-arrow`                 | Enlace con subrayado que crece y flecha que avanza.                                                                        |
+| `.btn-cta` / `.btn-secondary` | Píldoras que se inflan con rebote; el CTA es magnético (sigue al cursor), tiene destello y flecha.                         |
 
 Todo se desactiva con `prefers-reduced-motion: reduce`. El texto dentro de `.bg-tech` usa
 `--color-text-on-decor`, y `npm test` verifica su contraste sobre el punto más intenso del destello.
+
+**Carga y navegación**
+
+- **Loader inicial** (`src/scripts/page-loader.ts`): solo aparece si la página tarda más de ~300ms;
+  se retira con un desvanecido y entonces arranca la entrada del hero. Tope de 3s (4s solo con CSS).
+- **Transición entre páginas** (`<ClientRouter />`, `src/lib/transitions.ts`): el contenido cae y el
+  nuevo cae en su lugar con rebote; el header y el botón de WhatsApp no se mueven. Si la página tarda
+  más de 250ms, aparece una barra de progreso arriba. Las páginas se precargan al pasar el cursor.
+- **Scripts y ClientRouter:** los `<script>` de los componentes se ejecutan una sola vez por sesión.
+  Lo que toca el DOM de la página debe inicializarse en `document.addEventListener('astro:page-load', …)`.
 
 El carrusel de casos (`CaseCarousel.astro`) usa scroll-snap nativo (funciona sin JS) y añade botones,
 puntos y flechas del teclado. No tiene reproducción automática a propósito (WCAG 2.2.2).
@@ -105,6 +123,8 @@ puntos y flechas del teclado. No tiene reproducción automática a propósito (W
 
 `data-theme` en `<html>`: la preferencia guardada (botón del header) manda; si no hay, la página de inicio usa el
 modo oscuro y las demás siguen `prefers-color-scheme`. Sin JavaScript se aplica `prefers-color-scheme`.
+Esa regla aplica al entrar directo a una página (`data-default-theme`); al navegar dentro del sitio se
+conserva el tema actual.
 
 Al cambiar de tema, el ícono se transforma entre luna y sol, y el tema nuevo se expande como una onda
 circular desde el botón (View Transition API, en `Header.astro`). En navegadores sin soporte o con
@@ -126,6 +146,10 @@ circular desde el botón (View Transition API, en `Header.astro`). En navegadore
   `tests/brand-rules.test.ts` impide sombras en el código y verifica que toda ruta `/brand/...` exista con las
   mayúsculas exactas (en Linux `Isotipo.svg` ≠ `isotipo.svg`).
 - Para mostrar el isotipo usa `<Logo variant="isotipo" />` en lugar de un `<img>` directo, así cambia con el tema.
+
+## Seguridad
+
+Cabeceras HTTP, CSP, terceros y pendientes manuales: ver [SECURITY.md](SECURITY.md).
 
 ## Dominio y subdominios
 

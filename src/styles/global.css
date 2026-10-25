@@ -27,9 +27,10 @@
   --yolotl-slate-light: #8b96a6; /* 73% pizarra + 27% ivory -> 4.81:1 sobre navy-surface */
 
   /* Tipografía */
-  --font-heading: 'Plus Jakarta Sans', Montserrat, sans-serif;
-  --font-sans: 'Inter', 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  /* --font-jakarta, --font-inter y --font-jetbrains los define <Font> (astro.config.mjs). */
+  --font-heading: var(--font-jakarta), Montserrat, sans-serif;
+  --font-sans: var(--font-inter), 'DM Sans', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), 'Fira Code', monospace;
   --logo-letter-spacing: 0.08em;
 
   /* Espaciado (escala de 4px) */
@@ -53,6 +54,8 @@
 
   /* Movimiento. Todo se desactiva con prefers-reduced-motion. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --duration-fast: 150ms;
   --duration-base: 300ms;
   --duration-slow: 700ms;
@@ -236,9 +239,13 @@
    * CTA de conversión (naranja). El texto es navy, nunca blanco.
    * Navy sobre orange-hover da 4.11:1, así que el texto va en 19px y negrita
    * para contar como texto grande (umbral AA de 3:1).
+   *
+   * Hover: el botón se "infla" con rebote (--btn-scale) y el CTA además sigue al cursor
+   * (--mx/--my, src/scripts/magnetic.ts). Todo con transform: no mueve el layout.
    */
   .btn-cta,
   .btn-secondary {
+    --btn-scale: 1;
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -251,8 +258,9 @@
     text-decoration: none;
     isolation: isolate;
     overflow: hidden;
+    transform: translate3d(var(--mx, 0px), var(--my, 0px), 0) scale(var(--btn-scale));
     transition:
-      transform var(--duration-fast) var(--ease-out),
+      transform 450ms var(--ease-spring),
       background-color var(--duration-base) var(--ease-out),
       color var(--duration-base) var(--ease-out),
       border-color var(--duration-base) var(--ease-out);
@@ -274,16 +282,22 @@
     background-color: currentColor;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E")
       center / contain no-repeat;
-    transition: transform var(--duration-base) var(--ease-out);
+    transition: transform var(--duration-base) var(--ease-spring);
   }
 
-  .btn-cta:hover {
-    background-color: var(--color-cta-bg-hover);
-    transform: translateY(-2px);
-  }
-
-  .btn-cta:hover::after {
-    transform: translateX(4px);
+  /* Destello que cruza el CTA una vez por hover (debajo del texto). */
+  .btn-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      110deg,
+      transparent 35%,
+      color-mix(in srgb, var(--yolotl-ivory) 45%, transparent) 50%,
+      transparent 65%
+    );
+    transform: translateX(-120%);
   }
 
   .btn-secondary {
@@ -304,19 +318,40 @@
     transition: transform var(--duration-base) var(--ease-out);
   }
 
-  .btn-secondary:hover {
-    border-color: var(--color-secondary-hover-bg);
-    color: var(--color-secondary-hover-text);
-    transform: translateY(-2px);
-  }
+  /* Solo con mouse: en pantallas táctiles el hover se quedaría "pegado" tras tocar. */
+  @media (hover: hover) {
+    .btn-cta:hover,
+    .btn-secondary:hover {
+      --btn-scale: 1.06;
+    }
 
-  .btn-secondary:hover::before {
-    transform: scaleX(1);
+    .btn-cta:hover {
+      background-color: var(--color-cta-bg-hover);
+    }
+
+    .btn-cta:hover::after {
+      transform: translateX(5px);
+    }
+
+    .btn-cta:hover::before {
+      transform: translateX(120%);
+      transition: transform 700ms var(--ease-out);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-secondary-hover-bg);
+      color: var(--color-secondary-hover-text);
+    }
+
+    .btn-secondary:hover::before {
+      transform: scaleX(1);
+    }
   }
 
   .btn-cta:active,
   .btn-secondary:active {
-    transform: translateY(0) scale(0.98);
+    --btn-scale: 0.96;
+    transition-duration: 120ms;
   }
 
   .card {
@@ -422,34 +457,52 @@
       radial-gradient(circle at 15% 85%, var(--glow-orange), transparent 35%);
   }
 
-  /* Contenido que aparece al entrar en pantalla (lo activa el script de BaseLayout). */
+  /*
+   * Aparición al hacer scroll (src/scripts/reveal.ts). Variantes de [data-reveal]:
+   * (vacío) sube · scale · left · right · blur. El escalonado (--reveal-delay) lo calcula el script.
+   */
   @media (prefers-reduced-motion: no-preference) {
     html.js [data-reveal] {
       opacity: 0;
-      transform: translateY(24px);
+      transform: translateY(16px);
       transition:
-        opacity var(--duration-slow) var(--ease-out),
-        transform var(--duration-slow) var(--ease-out);
+        opacity 600ms var(--ease-out-expo),
+        transform 600ms var(--ease-out-expo),
+        filter 600ms var(--ease-out-expo);
       transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    html.js [data-reveal='scale'] {
+      transform: translateY(8px) scale(0.94);
+    }
+
+    html.js [data-reveal='left'] {
+      transform: translateX(-24px);
+    }
+
+    html.js [data-reveal='right'] {
+      transform: translateX(24px);
+    }
+
+    html.js [data-reveal='blur'] {
+      filter: blur(6px);
+      transform: translateY(8px);
     }
 
     html.js [data-reveal].is-visible {
       opacity: 1;
       transform: none;
+      filter: none;
     }
 
-    /* Escalonado dentro de rejillas de tarjetas. */
-    [data-reveal]:nth-child(2) {
-      --reveal-delay: 100ms;
+    /* Entrada del hero. Espera a que se retire el loader y no se repite al navegar
+       (la página nueva ya entra con la transición de ClientRouter). */
+    html:not(.is-client-nav) .hero-enter > * {
+      animation: fade-up var(--duration-slow) var(--ease-out-expo) both;
     }
 
-    [data-reveal]:nth-child(3) {
-      --reveal-delay: 200ms;
-    }
-
-    /* Entrada del hero al cargar. */
-    .hero-enter > * {
-      animation: fade-up var(--duration-slow) var(--ease-out) both;
+    html.js:not(.is-loaded) .hero-enter > * {
+      animation-play-state: paused;
     }
 
     .hero-enter > :nth-child(2) {
@@ -471,6 +524,77 @@
     .bg-tech::after {
       animation: glow-drift 18s ease-in-out infinite alternate;
     }
+  }
+
+  /*
+   * Loader de la primera carga (src/scripts/page-loader.ts). Aparece con 300ms de retraso
+   * para no destellar en cargas rápidas; si el script fallara, se oculta solo a los 4s.
+   */
+  .page-loader {
+    display: none;
+  }
+
+  html.js .page-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: var(--space-6);
+    background-color: var(--color-bg);
+    animation:
+      loader-in 200ms ease-out 300ms both,
+      loader-out 400ms ease-in 4s forwards;
+  }
+
+  .page-loader-bar {
+    position: relative;
+    width: 120px;
+    height: 3px;
+    overflow: hidden;
+    border-radius: var(--radius-full);
+    background-color: color-mix(in srgb, var(--yolotl-slate) 35%, transparent);
+  }
+
+  .page-loader-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    border-radius: inherit;
+    background-color: var(--color-border-accent);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .page-loader-mark {
+      animation: hover-flight 1.2s ease-in-out infinite;
+    }
+
+    .page-loader-bar::after {
+      animation: indeterminate 1.1s ease-in-out infinite;
+    }
+  }
+
+  /* Barra superior durante la navegación interna, si la página tarda (navigation.ts). */
+  .nav-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-border-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  html.is-navigating .nav-progress {
+    opacity: 1;
+    transform: scaleX(0.85);
+    transition: transform 8s cubic-bezier(0.1, 0.7, 0.2, 1);
   }
 
   .todo {
@@ -500,11 +624,89 @@
 }
 
 /*
- * Cambio de tema con onda: Header.astro anima ::view-transition-new(root) con clip-path.
- * Se apaga la animación por defecto (fundido) para que solo se vea la onda.
+ * Cambio de tema con onda: Header.astro agrega .theme-switching durante el cambio y anima
+ * ::view-transition-new(root) con clip-path. Solo entonces se apaga el fundido por defecto,
+ * para no interferir con las transiciones entre páginas de ClientRouter.
+ *
+ * ClientRouter da nombre propio al <html> (para la caída entre páginas) y al header. Durante el
+ * cambio de tema se anulan: toda la página vuelve a ser "root" y la onda la cubre completa.
  */
-::view-transition-old(root),
-::view-transition-new(root) {
+html.theme-switching[data-astro-transition-scope] {
+  view-transition-name: root;
+}
+
+html.theme-switching [data-astro-transition-scope] {
+  view-transition-name: none;
+}
+
+html.theme-switching::view-transition-old(root),
+html.theme-switching::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+/* Transición entre páginas (src/lib/transitions.ts): el contenido cae y el nuevo cae en su lugar. */
+@keyframes page-fall-out {
+  70% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(56px) rotate(1.5deg);
+  }
+}
+
+@keyframes page-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-32px);
+  }
+}
+
+@keyframes page-rise-out {
+  70% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-56px) rotate(-1.5deg);
+  }
+}
+
+@keyframes page-lift-in {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+
+@keyframes loader-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes loader-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes hover-flight {
+  50% {
+    transform: translateY(-8px) rotate(-4deg) scale(1.04);
+  }
+}
+
+@keyframes indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(250%);
+  }
 }

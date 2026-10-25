@@ -1,11 +1,15 @@
 ---
 import '@/styles/global.css';
+import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
 import SEO from '@/components/SEO.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import Logo from '@/components/Logo.astro';
 import WhatsAppButton from '@/components/WhatsAppButton.astro';
 import { SITE } from '@/lib/site';
 import { getSeo, type PageKey } from '@/lib/seo';
+import { pageFall } from '@/lib/transitions';
 
 interface Props {
   page: PageKey;
@@ -20,34 +24,37 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={SITE.lang} data-default-theme={defaultTheme} transition:animate={pageFall}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
     <!--
-      Tema: preferencia guardada > predeterminado de la página > prefers-color-scheme.
-      Se ejecuta antes de pintar para evitar un destello del tema equivocado.
+      Tema: preferencia guardada > predeterminado de la página (data-default-theme) >
+      prefers-color-scheme. Se ejecuta antes de pintar para evitar un destello.
+      El contenido de este script NO debe variar entre páginas: su hash SHA-256 está en
+      la CSP de vercel.json (npm run verify:csp lo comprueba en CI).
     -->
-    <script is:inline define:vars={{ defaultTheme }}>
-      document.documentElement.classList.add('js');
-      try {
-        const saved = localStorage.getItem('yolotl-theme');
-        if (saved === 'dark' || saved === 'light') {
-          document.documentElement.dataset.theme = saved;
-        } else if (defaultTheme === 'dark') {
-          document.documentElement.dataset.theme = 'dark';
-        } else {
-          document.documentElement.dataset.theme = window.matchMedia(
-            '(prefers-color-scheme: light)',
-          ).matches
-            ? 'light'
-            : 'dark';
+    <script is:inline>
+      (() => {
+        const html = document.documentElement;
+        html.classList.add('js');
+        let theme = null;
+        try {
+          theme = localStorage.getItem('yolotl-theme');
+        } catch {
+          // Sin almacenamiento: se usa el predeterminado.
         }
-      } catch {
-        if (defaultTheme === 'dark') document.documentElement.dataset.theme = 'dark';
-      }
+        if (theme !== 'dark' && theme !== 'light') {
+          theme =
+            html.dataset.defaultTheme === 'dark' ||
+            !window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'dark'
+              : 'light';
+        }
+        html.dataset.theme = theme;
+      })();
     </script>
 
     <SEO title={title} description={description} noindex={noindex} />
@@ -56,25 +63,13 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#0D1F38" />
 
-    <!-- Fuentes desde Google Fonts con font-display: swap. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
-    />
-    <!--
-      Respaldo: si Google Fonts no está disponible o se prefiere no depender de terceros,
-      alojar las fuentes en el propio sitio:
-        npm install @fontsource-variable/inter @fontsource/plus-jakarta-sans @fontsource/jetbrains-mono
-      y en este archivo:
-        import '@fontsource-variable/inter';
-        import '@fontsource/plus-jakarta-sans/700.css';
-        import '@fontsource/plus-jakarta-sans/800.css';
-        import '@fontsource/jetbrains-mono/400.css';
-      Mientras tanto, las pilas de --font-* en global.css caen en Montserrat, DM Sans,
-      Fira Code o la fuente del sistema.
-    -->
+    <!-- Fuentes alojadas en el sitio (ver `fonts` en astro.config.mjs). -->
+    <Font cssVariable="--font-inter" preload={[{ weight: 400 }, { weight: 700 }]} />
+    <Font cssVariable="--font-jakarta" preload={[{ weight: 800 }]} />
+    <Font cssVariable="--font-jetbrains" />
+
+    <!-- Navegación entre páginas con animación (src/lib/transitions.ts). -->
+    <ClientRouter />
 
     {plausibleDomain && (
       <script
@@ -86,6 +81,17 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     )}
   </head>
   <body class="flex min-h-screen flex-col">
+    <!-- Loader de la primera carga: solo aparece si la página tarda más de ~300ms. -->
+    <div class="page-loader" role="status" aria-label="Cargando" data-page-loader>
+      <div class="page-loader-mark">
+        <Logo variant="isotipo" width={72} withClearspace={false} alt="" />
+      </div>
+      <div class="page-loader-bar" aria-hidden="true"></div>
+    </div>
+
+    <!-- Barra superior mientras llega una página por navegación interna. -->
+    <div class="nav-progress" aria-hidden="true" transition:persist="nav-progress"></div>
+
     <Header />
     <main id="contenido" class="flex-1">
       <slot />
@@ -94,24 +100,20 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     <WhatsAppButton />
 
     <script>
-      // Aparición al hacer scroll: [data-reveal] recibe .is-visible al entrar en pantalla.
-      // El CSS solo oculta esos elementos con JS activo y sin prefers-reduced-motion.
-      const targets = document.querySelectorAll('[data-reveal]');
-      if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            for (const entry of entries) {
-              if (!entry.isIntersecting) continue;
-              entry.target.classList.add('is-visible');
-              observer.unobserve(entry.target);
-            }
-          },
-          { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
-        );
-        targets.forEach((el) => observer.observe(el));
-      } else {
-        targets.forEach((el) => el.classList.add('is-visible'));
-      }
+      import { initMagnetic } from '@/scripts/magnetic';
+      import { initNavigation } from '@/scripts/navigation';
+      import { initPageLoader } from '@/scripts/page-loader';
+      import { initReveal } from '@/scripts/reveal';
+
+      // Una sola vez por sesión (los módulos no se vuelven a ejecutar al navegar).
+      initPageLoader();
+      initNavigation();
+
+      // En cada página: la primera carga y cada navegación con ClientRouter.
+      document.addEventListener('astro:page-load', () => {
+        void initReveal();
+        initMagnetic();
+      });
     </script>
   </body>
 </html>

@@ -201,79 +201,84 @@ const total = entries.length;
 </style>
 
 <script>
-  for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
-    const track = root.querySelector<HTMLElement>('[data-track]');
-    const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
-    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-dot]'));
-    const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
-    const next = root.querySelector<HTMLButtonElement>('[data-next]');
-    const status = root.querySelector<HTMLElement>('[data-status]');
-    if (!track || slides.length < 2) continue;
+  // Con <ClientRouter /> se inicializa en cada página (astro:page-load).
+  function initCarousels() {
+    for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) {
+      const track = root.querySelector<HTMLElement>('[data-track]');
+      const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-slide]'));
+      const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-dot]'));
+      const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
+      const next = root.querySelector<HTMLButtonElement>('[data-next]');
+      const status = root.querySelector<HTMLElement>('[data-status]');
+      if (!track || slides.length < 2) continue;
 
-    let current = 0;
-    // Mientras dura un desplazamiento iniciado por botones o puntos, no se recalcula el índice:
-    // con dos casos visibles, el último no puede quedar a la izquierda y se perdería la selección.
-    let programmatic = false;
-    let settle: number | undefined;
+      let current = 0;
+      // Mientras dura un desplazamiento iniciado por botones o puntos, no se recalcula el índice:
+      // con dos casos visibles, el último no puede quedar a la izquierda y se perdería la selección.
+      let programmatic = false;
+      let settle: number | undefined;
 
-    const atStart = () => track.scrollLeft <= 2;
-    const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+      const atStart = () => track.scrollLeft <= 2;
+      const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
 
-    const update = (index: number, announce = false) => {
-      current = index;
-      dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
-      if (prev) prev.disabled = atStart();
-      if (next) next.disabled = atEnd();
-      if (announce && status) status.textContent = `Caso ${index + 1} de ${slides.length}`;
-    };
+      const update = (index: number, announce = false) => {
+        current = index;
+        dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
+        if (prev) prev.disabled = atStart();
+        if (next) next.disabled = atEnd();
+        if (announce && status) status.textContent = `Caso ${index + 1} de ${slides.length}`;
+      };
 
-    const goTo = (index: number) => {
-      const target = Math.max(0, Math.min(index, slides.length - 1));
-      const left = Math.min(slides[target]!.offsetLeft, track.scrollWidth - track.clientWidth);
-      // Si ya está en esa posición no habrá evento scroll que limpie la bandera.
-      programmatic = Math.abs(left - track.scrollLeft) > 2;
-      track.scrollTo({ left });
-      update(target, true);
-    };
+      const goTo = (index: number) => {
+        const target = Math.max(0, Math.min(index, slides.length - 1));
+        const left = Math.min(slides[target]!.offsetLeft, track.scrollWidth - track.clientWidth);
+        // Si ya está en esa posición no habrá evento scroll que limpie la bandera.
+        programmatic = Math.abs(left - track.scrollLeft) > 2;
+        track.scrollTo({ left });
+        update(target, true);
+      };
 
-    // Deslizamiento manual: el caso actual es el más cercano al borde izquierdo
-    // (o el último, si ya no se puede avanzar más).
-    const indexFromScroll = () => {
-      if (atEnd()) return slides.length - 1;
-      let nearest = 0;
-      slides.forEach((slide, i) => {
-        const distance = Math.abs(slide.offsetLeft - track.scrollLeft);
-        if (distance < Math.abs(slides[nearest]!.offsetLeft - track.scrollLeft)) nearest = i;
+      // Deslizamiento manual: el caso actual es el más cercano al borde izquierdo
+      // (o el último, si ya no se puede avanzar más).
+      const indexFromScroll = () => {
+        if (atEnd()) return slides.length - 1;
+        let nearest = 0;
+        slides.forEach((slide, i) => {
+          const distance = Math.abs(slide.offsetLeft - track.scrollLeft);
+          if (distance < Math.abs(slides[nearest]!.offsetLeft - track.scrollLeft)) nearest = i;
+        });
+        return nearest;
+      };
+
+      track.addEventListener(
+        'scroll',
+        () => {
+          update(current);
+          window.clearTimeout(settle);
+          settle = window.setTimeout(() => {
+            if (!programmatic) update(indexFromScroll());
+            programmatic = false;
+          }, 150);
+        },
+        { passive: true },
+      );
+      prev?.addEventListener('click', () => goTo(current - 1));
+      next?.addEventListener('click', () => goTo(current + 1));
+      dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+      root.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          goTo(current - 1);
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          goTo(current + 1);
+        }
       });
-      return nearest;
-    };
 
-    track.addEventListener(
-      'scroll',
-      () => {
-        update(current);
-        window.clearTimeout(settle);
-        settle = window.setTimeout(() => {
-          if (!programmatic) update(indexFromScroll());
-          programmatic = false;
-        }, 150);
-      },
-      { passive: true },
-    );
-    prev?.addEventListener('click', () => goTo(current - 1));
-    next?.addEventListener('click', () => goTo(current + 1));
-    dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
-
-    root.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault();
-        goTo(current - 1);
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        goTo(current + 1);
-      }
-    });
-
-    update(0);
+      update(0);
+    }
   }
+
+  document.addEventListener('astro:page-load', initCarousels);
 </script>

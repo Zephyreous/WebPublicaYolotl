@@ -16,7 +16,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:contrast": "vitest run tests/contrast.test.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "verify:csp": "node scripts/verify-csp.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

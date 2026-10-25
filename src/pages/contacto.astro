@@ -10,7 +10,7 @@ const wa = whatsappUrl();
 
 <BaseLayout page="contacto">
   <div class="container-site grid gap-12 py-16 md:grid-cols-2">
-    <div>
+    <div data-reveal="left">
       <span class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm font-semibold">
         <Logo variant="isotipo" width={18} withClearspace={false} alt="" />
         Contacto Directo
@@ -66,7 +66,7 @@ const wa = whatsappUrl();
       </div>
     </div>
 
-    <div id="formulario">
+    <div id="formulario" data-reveal="right">
       <h2 class="sr-only">Formulario de contacto</h2>
       <ContactForm />
     </div>

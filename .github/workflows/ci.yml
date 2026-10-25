@@ -4,16 +4,26 @@ on:
   push:
   pull_request:
 
+# Permisos mínimos: el workflow solo necesita leer el repositorio.
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # Acciones fijadas por SHA (no por etiqueta) para que no cambien sin revisión.
+      # Dependabot propone las actualizaciones (.github/dependabot.yml).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Auditoría de dependencias
+        run: npm audit --audit-level=high
       - name: Formato
         run: npm run format:check
       - name: Lint
@@ -24,3 +34,5 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+      - name: CSP de vercel.json cubre el build
+        run: npm run verify:csp

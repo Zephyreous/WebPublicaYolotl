@@ -7,7 +7,12 @@ const isActive = (href: string) =>
   href === '/' ? current === '/' : current === href || current.startsWith(`${href}/`);
 ---
 
-<header class="site-header sticky top-0 z-50 border-b border-border">
+<!-- transition:animate="none": el header no "se cae" al cambiar de página. -->
+<header
+  class="site-header sticky top-0 z-50 border-b border-border"
+  transition:name="site-header"
+  transition:animate="none"
+>
   <a
     href="#contenido"
     class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-4 focus:z-50 focus:rounded-md focus:bg-bg focus:p-2"
@@ -241,76 +246,61 @@ const isActive = (href: string) =>
 </style>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  import { THEME_STORAGE_KEY, type Theme } from '@/scripts/theme';
 
-  function setOpen(open: boolean) {
-    if (!toggle || !menu) return;
-    toggle.setAttribute('aria-expanded', String(open));
-    menu.toggleAttribute('data-open', open);
-  }
-
-  toggle?.addEventListener('click', () => {
-    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
-      setOpen(false);
-      toggle.focus();
-    }
-  });
-
-  const themeToggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
-
-  function currentTheme(): 'dark' | 'light' {
+  // Con <ClientRouter /> el header se vuelve a renderizar en cada página:
+  // los listeners de sus botones se enganchan en cada astro:page-load.
+  function currentTheme(): Theme {
     const attr = document.documentElement.dataset.theme;
     if (attr === 'dark' || attr === 'light') return attr;
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   }
 
-  function updateThemeLabel() {
+  function updateThemeLabel(button: HTMLButtonElement | null) {
     const next = currentTheme() === 'dark' ? 'claro' : 'oscuro';
-    themeToggle?.setAttribute('aria-label', `Cambiar a modo ${next}`);
+    button?.setAttribute('aria-label', `Cambiar a modo ${next}`);
   }
 
-  function applyTheme(theme: 'dark' | 'light') {
+  function applyTheme(theme: Theme, button: HTMLButtonElement | null) {
     document.documentElement.dataset.theme = theme;
     try {
-      localStorage.setItem('yolotl-theme', theme);
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
     } catch {
       // Sin almacenamiento disponible: el cambio dura solo esta página.
     }
-    updateThemeLabel();
+    updateThemeLabel(button);
   }
 
-  themeToggle?.addEventListener('click', () => {
+  function switchTheme(button: HTMLButtonElement) {
     const next = currentTheme() === 'dark' ? 'light' : 'dark';
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Sin View Transitions o con movimiento reducido, el cambio es instantáneo.
     if (!document.startViewTransition || reduceMotion) {
-      applyTheme(next);
+      applyTheme(next, button);
       return;
     }
 
     // Salpicadura del botón: se reinicia la animación en cada clic.
-    themeToggle.classList.remove('is-splashing');
-    void themeToggle.offsetWidth;
-    themeToggle.classList.add('is-splashing');
+    button.classList.remove('is-splashing');
+    void button.offsetWidth;
+    button.classList.add('is-splashing');
 
     // La onda nace en el centro del botón y crece hasta la esquina más lejana.
-    const rect = themeToggle.getBoundingClientRect();
+    const rect = button.getBoundingClientRect();
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
     const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
     const at = `at ${x}px ${y}px`;
 
-    const transition = document.startViewTransition(() => applyTheme(next));
+    // .theme-switching limita el CSS de la onda a este cambio (no a la navegación entre páginas).
+    const html = document.documentElement;
+    html.classList.add('theme-switching');
+    const transition = document.startViewTransition(() => applyTheme(next, button));
     transition.ready
       .then(() => {
         // "Drop": primero se forma una gota y luego se expande por toda la página.
-        document.documentElement.animate(
+        html.animate(
           [
             { clipPath: `circle(0px ${at})`, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
             { clipPath: `circle(28px ${at})`, offset: 0.2, easing: 'cubic-bezier(0.7, 0, 0.2, 1)' },
@@ -322,7 +312,32 @@ const isActive = (href: string) =>
       .catch(() => {
         // Si la transición se cancela, el tema ya quedó aplicado.
       });
+    transition.finished.finally(() => html.classList.remove('theme-switching'));
+  }
+
+  function initHeader() {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const menu = document.querySelector<HTMLElement>('[data-menu]');
+    const themeToggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+
+    toggle?.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', String(open));
+      menu?.toggleAttribute('data-open', open);
+    });
+
+    themeToggle?.addEventListener('click', () => switchTheme(themeToggle));
+    updateThemeLabel(themeToggle);
+  }
+
+  // Escape cierra el menú móvil. Se registra una sola vez: busca el botón vigente.
+  document.addEventListener('keydown', (event) => {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    if (event.key !== 'Escape' || toggle?.getAttribute('aria-expanded') !== 'true') return;
+    toggle.setAttribute('aria-expanded', 'false');
+    document.querySelector('[data-menu]')?.removeAttribute('data-open');
+    toggle.focus();
   });
 
-  updateThemeLabel();
+  document.addEventListener('astro:page-load', initHeader);
 </script>
