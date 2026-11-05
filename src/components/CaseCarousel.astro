@@ -12,14 +12,18 @@ interface Props {
   entries: CollectionEntry<'casos'>[];
   label?: string;
   headingLevel?: 'h2' | 'h3';
+  /** id del track; por defecto se deriva de la etiqueta. Útil para evitar ids repetidos. */
+  id?: string;
 }
 
-const { entries, label = 'Casos de estudio', headingLevel = 'h3' } = Astro.props;
-const id = `carrusel-${label
-  .toLowerCase()
-  .normalize('NFD')
-  .replace(/[^a-z0-9]+/g, '-')
-  .replace(/^-|-$/g, '')}`;
+const { entries, label = 'Casos de estudio', headingLevel = 'h3', id: explicitId } = Astro.props;
+const id =
+  explicitId ??
+  `carrusel-${label
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')}`;
 const total = entries.length;
 ---
 
