@@ -1,17 +1,51 @@
 ---
-import { SITE } from '@/lib/site';
+import { SITE, isConfigured } from '@/lib/site';
 
 interface Props {
   title: string;
   description: string;
   image?: string;
   noindex?: boolean;
+  /** Emite los datos estructurados de la empresa (solo en la página de inicio). */
+  structuredData?: boolean;
 }
 
-const { title, description, image = '/og-image.png', noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  image = '/og-image.png',
+  noindex = false,
+  structuredData = false,
+} = Astro.props;
 const site = Astro.site ?? new URL(SITE.url);
 const canonical = new URL(Astro.url.pathname, site);
 const ogImage = new URL(image, site);
+
+// JSON-LD (schema.org). Solo datos reales: email, teléfono y redes se incluyen si están definidos
+// en src/lib/site.ts. Se sirve con is:inline para que llegue tal cual y con type no ejecutable
+// (verify-csp lo ignora).
+const socials = Object.values(SITE.social).filter(isConfigured);
+const whatsappDigits = SITE.whatsapp.replace(/\D/g, '');
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: SITE.name,
+  url: site.toString(),
+  logo: new URL('/brand/Icono.svg', site).toString(),
+  image: ogImage.toString(),
+  areaServed: 'MX',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Puebla',
+    addressRegion: 'Puebla',
+    addressCountry: 'MX',
+  },
+  ...(isConfigured(SITE.email) ? { email: SITE.email } : {}),
+  ...(isConfigured(SITE.whatsapp) && whatsappDigits !== ''
+    ? { telephone: `+${whatsappDigits}` }
+    : {}),
+  ...(socials.length > 0 ? { sameAs: socials } : {}),
+};
 ---
 
 <title>{title}</title>
@@ -37,3 +71,7 @@ const ogImage = new URL(image, site);
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
+
+{structuredData && !noindex && (
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(business)} />
+)}

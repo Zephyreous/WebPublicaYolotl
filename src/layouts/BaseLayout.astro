@@ -57,7 +57,12 @@ const { title, description } = getSeo(page);
       })();
     </script>
 
-    <SEO title={title} description={description} noindex={noindex} />
+    <SEO
+      title={title}
+      description={description}
+      noindex={noindex}
+      structuredData={page === 'inicio'}
+    />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
