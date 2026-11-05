@@ -165,6 +165,11 @@ const thanksUrl = new URL('/gracias/', site).toString();
 </style>
 
 <script>
+  import { navigate } from 'astro:transitions/client';
+
+  // Tope de espera del envío: si Web3Forms no responde, se avisa y se rehabilita el botón.
+  const TIMEOUT_MS = 15_000;
+
   // Con <ClientRouter /> se inicializa en cada página (astro:page-load).
   function initContactForm() {
     const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
@@ -232,15 +237,20 @@ const thanksUrl = new URL('/gracias/', site).toString();
             method: 'POST',
             headers: { Accept: 'application/json' },
             body: new FormData(form),
+            signal: AbortSignal.timeout(TIMEOUT_MS),
           });
           const result: { success?: boolean } = await response.json();
           if (!response.ok || !result.success) throw new Error('Envío rechazado');
           showStatus('success', '¡Gracias! Recibimos tu mensaje.');
-          window.location.assign('/gracias/');
-        } catch {
+          // Navegación del ClientRouter: mantiene la transición entre páginas y el estado del sitio.
+          await navigate('/gracias/');
+        } catch (error) {
+          const timedOut = error instanceof DOMException && error.name === 'TimeoutError';
           showStatus(
             'error',
-            'No pudimos enviar tu mensaje. Intenta de nuevo en unos minutos o escríbenos por WhatsApp.',
+            timedOut
+              ? 'El envío tardó demasiado. Revisa tu conexión e inténtalo de nuevo en unos minutos.'
+              : 'No pudimos enviar tu mensaje. Intenta de nuevo en unos minutos o escríbenos por WhatsApp.',
           );
         } finally {
           if (submit) submit.disabled = false;
