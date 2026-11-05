@@ -544,6 +544,16 @@
     }
   }
 
+  /*
+   * Animaciones decorativas fuera de pantalla (src/scripts/offscreen.ts). Pausarlas evita gastar
+   * CPU/GPU en bucles que nadie ve; al volver a entrar, siguen donde iban.
+   * Va después de las declaraciones de .float y .bg-tech::after para ganar por orden.
+   */
+  [data-offscreen],
+  [data-offscreen]::after {
+    animation-play-state: paused;
+  }
+
   /* Barra superior durante la navegación interna, si la página tarda (navigation.ts). */
   .nav-progress {
     position: fixed;

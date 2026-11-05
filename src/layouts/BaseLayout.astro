@@ -100,6 +100,7 @@ const { title, description } = getSeo(page);
     <script>
       import { initMagnetic } from '@/scripts/magnetic';
       import { initNavigation } from '@/scripts/navigation';
+      import { initOffscreenAnimations } from '@/scripts/offscreen';
       import { initReveal } from '@/scripts/reveal';
 
       // Una sola vez por sesión (los módulos no se vuelven a ejecutar al navegar).
@@ -109,6 +110,7 @@ const { title, description } = getSeo(page);
       document.addEventListener('astro:page-load', () => {
         initReveal();
         initMagnetic();
+        initOffscreenAnimations();
       });
     </script>
   </body>
