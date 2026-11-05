@@ -12,6 +12,7 @@ Sitio estático de Yolotl Labs hecho con Astro 7, TypeScript estricto y Tailwind
 ```sh
 npm install            # instala dependencias
 cp .env.example .env   # y llena las variables (ver abajo)
+npx playwright install chromium  # navegador para las pruebas E2E
 npm run dev            # servidor local en http://localhost:4321
 npm run build          # genera el sitio en dist/
 npm run preview        # sirve dist/ localmente
@@ -59,8 +60,9 @@ src/
                 transitions.ts (animación entre páginas)
   assets/       imágenes de marcador procesadas por <Image> de Astro
 public/brand/   logos SVG (actualmente marcadores)
-tests/          contrast.test.ts, brand-rules.test.ts, example.spec.ts
-scripts/        verify-csp.mjs (CI)
+tests/          contrast.test.ts y brand-rules.test.ts (Vitest)
+tests/e2e/      pruebas Playwright (estructura, teclado, tema, formulario y axe-core)
+scripts/        verify-csp.mjs y check-content.mjs (CI)
 vercel.json     cabeceras de seguridad y caché
 ```
 
