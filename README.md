@@ -60,6 +60,10 @@ vercel.json     cabeceras de seguridad y caché
 
 Los datos de la empresa (correo, WhatsApp, redes, dominio) se editan **solo** en `src/lib/site.ts`.
 
+Los casos con `draft: true` en el frontmatter no se listan: `src/lib/content.ts` devuelve solo los
+publicados, ordenados por fecha. Mientras no haya ninguno publicado, la sección de la portada no se
+renderiza y `/casos/` muestra un estado vacío con un CTA a contacto.
+
 ## Tokens de marca
 
 Fuente: _Manual de Identidad Visual & UI Kit V1.0_. Definidos en `src/styles/global.css` y mapeados en

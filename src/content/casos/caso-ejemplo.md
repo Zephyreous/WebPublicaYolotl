@@ -6,6 +6,7 @@ summary: 'TODO: resumen de una o dos líneas del caso.'
 cover: ../../assets/placeholders/caso-ejemplo.png
 coverAlt: 'Marcador: imagen de portada del caso de estudio, pendiente de captura real'
 date: 2026-10-01
+draft: true
 results:
   - 'TODO: resultado medible 1'
   - 'TODO: resultado medible 2'

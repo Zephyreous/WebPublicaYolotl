@@ -6,12 +6,12 @@ import Hero from '@/components/Hero.astro';
 import ServiceCard from '@/components/ServiceCard.astro';
 import ProductPOS from '@/components/ProductPOS.astro';
 import CaseCarousel from '@/components/CaseCarousel.astro';
+import { getCasosPublicados } from '@/lib/content';
 import { PAGES } from '@/lib/seo';
 
 const servicios = (await getCollection('servicios')).sort((a, b) => a.data.order - b.data.order);
-const casos = (await getCollection('casos'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 6);
+// Solo casos publicados (draft: false). Si no hay ninguno, la sección no se renderiza.
+const casos = (await getCasosPublicados()).slice(0, 6);
 ---
 
 <BaseLayout page="inicio" defaultTheme="dark">
@@ -83,22 +83,24 @@ const casos = (await getCollection('casos'))
     </div>
   </section>
 
-  <section class="container-site py-16" aria-labelledby="casos-titulo">
-    <div class="flex items-center gap-3" data-reveal>
-      <Logo variant="isotipo" width={28} withClearspace={false} alt="" />
-      <h2 id="casos-titulo" class="text-3xl">
-        Casos de estudio
-      </h2>
-    </div>
-    <div class="mt-8" data-reveal>
-      <CaseCarousel entries={casos} />
-    </div>
-    <p class="mt-6">
-      <a href="/casos/" class="link-arrow">
-        Ver todos los casos
-      </a>
-    </p>
-  </section>
+  {casos.length > 0 && (
+    <section class="container-site py-16" aria-labelledby="casos-titulo">
+      <div class="flex items-center gap-3" data-reveal>
+        <Logo variant="isotipo" width={28} withClearspace={false} alt="" />
+        <h2 id="casos-titulo" class="text-3xl">
+          Casos de estudio
+        </h2>
+      </div>
+      <div class="mt-8" data-reveal>
+        <CaseCarousel entries={casos} />
+      </div>
+      <p class="mt-6">
+        <a href="/casos/" class="link-arrow">
+          Ver todos los casos
+        </a>
+      </p>
+    </section>
+  )}
 
   <!-- Banda final con el fondo decorado: va sobre --color-bg, no dentro de una tarjeta,
        porque sobre navy-surface el destello bajaría el contraste del texto. -->

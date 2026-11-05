@@ -24,6 +24,8 @@ const casos = defineCollection({
       coverAlt: z.string(),
       date: z.coerce.date(),
       results: z.array(z.string()).default([]),
+      /** true = borrador: no se lista en el sitio (ver src/lib/content.ts). */
+      draft: z.boolean().default(false),
     }),
 });
 

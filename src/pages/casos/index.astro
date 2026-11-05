@@ -1,13 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import CaseCarousel from '@/components/CaseCarousel.astro';
+import { getCasosPublicados } from '@/lib/content';
 import { PAGES } from '@/lib/seo';
 
-const casos = (await getCollection('casos')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+const casos = await getCasosPublicados();
 ---
 
 <BaseLayout page="casos">
@@ -17,7 +15,21 @@ const casos = (await getCollection('casos')).sort(
     subtitle="Conoce cómo acompañamos a negocios locales a transformar sus procesos manuales en plataformas automatizadas y eficientes."
   />
 
-  <div class="container-site py-16" data-reveal>
-    <CaseCarousel entries={casos} headingLevel="h2" />
-  </div>
+  {casos.length > 0 ? (
+    <div class="container-site py-16" data-reveal>
+      <CaseCarousel entries={casos} headingLevel="h2" />
+    </div>
+  ) : (
+    <section class="container-site py-16" aria-labelledby="sin-casos-titulo">
+      <div class="card mx-auto max-w-2xl text-center" data-reveal>
+        <h2 id="sin-casos-titulo" class="text-2xl">
+          Casos en preparación
+        </h2>
+        <p class="mt-3 text-muted">Pronto publicaremos nuestros casos de estudio.</p>
+        <a href="/contacto/" class="btn-cta mt-8">
+          Pide una demo
+        </a>
+      </div>
+    </section>
+  )}
 </BaseLayout>
