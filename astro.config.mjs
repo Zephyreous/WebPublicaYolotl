@@ -8,7 +8,12 @@ import { SITE } from './src/lib/site.ts';
 export default defineConfig({
   site: SITE.url,
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // Solo páginas indexables: /gracias/ y /404/ son noindex y no deben anunciarse.
+      filter: (page) => !page.endsWith('/gracias/') && !page.endsWith('/404/'),
+    }),
+  ],
   // Con <ClientRouter /> las páginas se precargan al pasar el cursor por un enlace.
   prefetch: {
     prefetchAll: true,
