@@ -10,6 +10,9 @@ dist/
 .env.*
 !.env.example
 
+# documentos internos (no subir)
+NoSubirGithub/
+
 # pruebas
 test-results/
 playwright-report/
