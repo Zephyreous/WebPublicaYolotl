@@ -153,9 +153,13 @@ circular desde el botón (View Transition API, en `Header.astro`). En navegadore
   - `isotipo-light.svg`: Misma pieza para fondos claros (el ala izquierda va en Azul Noche en lugar de Blanco Hueso,
     como en `Log+TextLight.svg`).
   - `Icono.svg`: Emblema en fondo Azul Noche (`#0D1F38`, 512×512px con esquinas redondeadas) para app icon y favicon.
-  - `Log+TextDark.svg` / `logo-dark.svg`: Isotipo + wordmark YOLOTL para fondos oscuros.
-  - `Log+TextLight.svg` / `logo-light.svg`: Isotipo + wordmark YOLOTL para fondos claros.
+  - `Log+TextDark.svg`: Isotipo + wordmark YOLOTL para fondos oscuros.
+  - `Log+TextLight.svg`: Isotipo + wordmark YOLOTL para fondos claros.
   - `Banner.svg`: Banner institucional oficial (1200×630px) con líneas de red y colibrí escalado.
+  - `isotipo*.svg` y `Log+Text*.svg` se conservan como **archivos fuente oficiales de marca** aunque el
+    sitio ya no los descargue: `BrandSprite.astro` los replica en línea. Los antiguos `logo-dark.svg`,
+    `logo-light.svg`, `logo-negativo.svg`, `logo-positivo.svg` y `brand/favicon.svg` eran copias byte a
+    byte y se eliminaron. El favicon que se sirve es `/favicon.svg`.
 - Ancho mínimo del logo completo: 110px; por debajo, `Logo.astro` conmuta automáticamente al isotipo.
 - Área de respeto: calibrada con la altura de la «O» del wordmark (`CLEARSPACE_RATIO = 0.22` en `Logo.astro` y `global.css`).
 - Prohibido: sombras, biseles, neón, deformar la proporción o rellenar el círculo central.
