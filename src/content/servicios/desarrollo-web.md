@@ -1,11 +1,11 @@
 ---
 title: Sitios y aplicaciones web
-summary: 'TODO: descripción corta del servicio de desarrollo web.'
+summary: 'Sitios y aplicaciones web rápidos, seguros y fáciles de usar, listos para crecer con tu empresa.'
 order: 1
 features:
-  - 'TODO: característica 1'
-  - 'TODO: característica 2'
-  - 'TODO: característica 3'
+  - 'Diseño adaptable a celular, tableta y computadora'
+  - 'Carga rápida y buenas prácticas de posicionamiento en buscadores'
+  - 'Seguridad y accesibilidad desde el primer día'
 ---
 
-TODO: descripción completa del servicio de sitios y aplicaciones web.
+Construimos la presencia digital de tu empresa con tecnología moderna y probada. Cada sitio y aplicación se entrega completamente funcional, optimizado y listo para administrarse y crecer.

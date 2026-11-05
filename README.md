@@ -37,9 +37,9 @@ El build descarga las fuentes de Google una vez (necesita red) y las sirve desde
 
 ## Variables de entorno
 
-| Variable               | Uso                                                          |
-| ---------------------- | ------------------------------------------------------------ |
-| `PUBLIC_WEB3FORMS_KEY` | Clave de acceso de Web3Forms para el formulario de contacto. |
+| Variable               | Uso                                                                                                                                                                                                                                                      |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PUBLIC_WEB3FORMS_KEY` | Clave de acceso de Web3Forms para el formulario de contacto. Los mensajes llegan al correo con el que se creó la clave (debe ser `SITE.email`). Si está vacía, el formulario abre la app de correo del visitante con el mensaje dirigido a `SITE.email`. |
 
 **Vercel Web Analytics** (`<Analytics />` en `BaseLayout.astro`) no necesita variables, pero hay que
 activarlo en el panel del proyecto en Vercel (pestaña _Analytics_). Solo registra visitas en los
@@ -49,7 +49,7 @@ despliegues de Vercel; en local (`npm run dev` o `npm run preview`) no envía da
 
 ```
 src/
-  components/   Header, Footer, Hero, ServiceCard, ProductPOS, CaseCard, TeamCard,
+  components/   Header, Footer, Hero, ServiceCard, CaseCard,
                 ContactForm, WhatsAppButton, SEO, Logo
   layouts/      BaseLayout.astro (head, fuentes, meta tags, tema, analítica, ClientRouter)
   pages/        una ruta por archivo
@@ -66,7 +66,7 @@ scripts/        verify-csp.mjs y check-content.mjs (CI)
 vercel.json     cabeceras de seguridad y caché
 ```
 
-Los datos de la empresa (correo, WhatsApp, redes, dominio) se editan **solo** en `src/lib/site.ts`.
+Los datos de la empresa (correo, WhatsApp, dominio) se editan **solo** en `src/lib/site.ts`.
 
 Los casos con `draft: true` en el frontmatter no se listan: `src/lib/content.ts` devuelve solo los
 publicados, ordenados por fecha. Mientras no haya ninguno publicado, la sección de la portada no se
@@ -178,9 +178,9 @@ Cabeceras HTTP, CSP, terceros y pendientes manuales: ver [SECURITY.md](SECURITY.
 
 ## Dominio y subdominios
 
-- Dominio principal: `yolotlabs.com` (**TODO: confirmar**). Vive en un solo lugar, `SITE.url` de
+- Dominio oficial: `yolotlabs.com`. Vive en un solo lugar, `SITE.url` de
   `src/lib/site.ts`; de ahí lo toman `astro.config.mjs` (canonical, sitemap y JSON-LD) y `/robots.txt`.
 - Subdominios previstos (no implementados en este repositorio):
-  - `app.yolotlabs.com`: aplicación (POS y paneles de clientes)
+  - `app.yolotlabs.com`: aplicación (productos y paneles de clientes)
   - `api.yolotlabs.com`: API pública y privada
   - `docs.yolotlabs.com`: documentación técnica

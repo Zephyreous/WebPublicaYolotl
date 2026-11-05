@@ -2,7 +2,7 @@
 export const PAGES = [
   '/',
   '/servicios/',
-  '/producto-pos/',
+  '/productos/',
   '/casos/',
   '/nosotros/',
   '/contacto/',

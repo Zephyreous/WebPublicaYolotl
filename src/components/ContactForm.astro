@@ -1,9 +1,11 @@
 ---
-import { SITE } from '@/lib/site';
+import { SITE, isConfigured } from '@/lib/site';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const site = Astro.site ?? new URL(SITE.url);
 const thanksUrl = new URL('/gracias/', site).toString();
+// Buzón que recibe los mensajes. Sin clave de Web3Forms, el formulario arma un correo hacia aquí.
+const inbox = isConfigured(SITE.email) ? SITE.email : '';
 ---
 
 <form
@@ -13,6 +15,7 @@ const thanksUrl = new URL('/gracias/', site).toString();
   novalidate
   data-contact-form
   data-configured={accessKey ? 'true' : 'false'}
+  data-inbox={inbox}
 >
   <input type="hidden" name="access_key" value={accessKey} />
   <input type="hidden" name="subject" value={`Nuevo mensaje desde ${SITE.domain}`} />
@@ -170,6 +173,17 @@ const thanksUrl = new URL('/gracias/', site).toString();
   // Tope de espera del envío: si Web3Forms no responde, se avisa y se rehabilita el botón.
   const TIMEOUT_MS = 15_000;
 
+  /** Correo prellenado con los datos del formulario (respaldo mientras no hay Web3Forms). */
+  function mailtoUrl(inbox: string, data: FormData): string {
+    const value = (name: string) => String(data.get(name) ?? '').trim();
+    const lines = [`Nombre: ${value('name')}`, `Correo: ${value('email')}`];
+    if (value('phone')) lines.push(`Teléfono: ${value('phone')}`);
+    if (value('company')) lines.push(`Negocio: ${value('company')}`);
+    lines.push('', value('message'));
+    const subject = `Nuevo mensaje de ${value('name')} desde el sitio web`;
+    return `mailto:${inbox}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+  }
+
   // Con <ClientRouter /> se inicializa en cada página (astro:page-load).
   function initContactForm() {
     const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
@@ -221,10 +235,17 @@ const thanksUrl = new URL('/gracias/', site).toString();
         }
 
         if (form.dataset.configured !== 'true') {
-          // TODO: definir PUBLIC_WEB3FORMS_KEY en .env para habilitar el envío.
+          // Sin PUBLIC_WEB3FORMS_KEY: se abre la app de correo del visitante con el mensaje listo,
+          // dirigido a SITE.email. Con la clave, Web3Forms envía el correo directamente.
+          const inbox = form.dataset.inbox;
+          if (!inbox) {
+            showStatus('error', 'El formulario aún no está configurado. Intenta más tarde.');
+            return;
+          }
+          window.location.href = mailtoUrl(inbox, new FormData(form));
           showStatus(
-            'error',
-            'El formulario aún no está configurado. Escríbenos por WhatsApp o correo mientras tanto.',
+            'success',
+            'Abrimos tu aplicación de correo con el mensaje listo: solo falta que lo envíes.',
           );
           return;
         }

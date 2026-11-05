@@ -21,10 +21,9 @@ const site = Astro.site ?? new URL(SITE.url);
 const canonical = new URL(Astro.url.pathname, site);
 const ogImage = new URL(image, site);
 
-// JSON-LD (schema.org). Solo datos reales: email, teléfono y redes se incluyen si están definidos
+// JSON-LD (schema.org). Solo datos reales: email y teléfono se incluyen si están definidos
 // en src/lib/site.ts. Se sirve con is:inline para que llegue tal cual y con type no ejecutable
 // (verify-csp lo ignora).
-const socials = Object.values(SITE.social).filter(isConfigured);
 const whatsappDigits = SITE.whatsapp.replace(/\D/g, '');
 const business = {
   '@context': 'https://schema.org',
@@ -44,7 +43,6 @@ const business = {
   ...(isConfigured(SITE.whatsapp) && whatsappDigits !== ''
     ? { telephone: `+${whatsappDigits}` }
     : {}),
-  ...(socials.length > 0 ? { sameAs: socials } : {}),
 };
 ---
 
@@ -62,10 +60,7 @@ const business = {
 <meta property="og:image" content={ogImage} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta
-  property="og:image:alt"
-  content={`${SITE.name}: software a la medida para negocios locales`}
-/>
+<meta property="og:image:alt" content={`${SITE.name}: soluciones a la medida para tu negocio`} />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />

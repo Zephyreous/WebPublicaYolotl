@@ -4,7 +4,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import ServiceCard from '@/components/ServiceCard.astro';
-import ProductPOS from '@/components/ProductPOS.astro';
 import CaseCarousel from '@/components/CaseCarousel.astro';
 import { getCasosPublicados } from '@/lib/content';
 import { PAGES } from '@/lib/seo';
@@ -16,10 +15,10 @@ const casos = (await getCasosPublicados()).slice(0, 6);
 
 <BaseLayout page="inicio" defaultTheme="dark">
   <Hero
-    badge="Software a la medida & POS con IA para negocios locales"
+    badge="Tecnología e ingeniería a la medida"
     title={PAGES.inicio.title}
-    subtitle="Creamos software a la medida, sistemas punto de venta y automatizaciones inteligentes para acelerar el crecimiento de pequeñas y medianas empresas."
-    cta={{ href: '/contacto/', label: 'Pide una demo' }}
+    subtitle="Creamos soluciones tecnológicas a la medida que impulsan el crecimiento de tu empresa."
+    cta={{ href: '/contacto/', label: 'Contáctanos' }}
     secondary={{ href: '/servicios/', label: 'Ver servicios' }}
   >
     <div slot="visual" class="float card overflow-hidden p-0">
@@ -27,7 +26,7 @@ const casos = (await getCasosPublicados()).slice(0, 6);
         src="/brand/Banner.svg"
         width="1200"
         height="630"
-        alt="Yolotl Labs - Plataforma de software e innovación"
+        alt="Yolotl Labs - Soluciones e innovación"
         class="w-full h-auto block"
         loading="eager"
       />
@@ -53,7 +52,7 @@ const casos = (await getCasosPublicados()).slice(0, 6);
     </p>
   </section>
 
-  <section class="border-y border-border bg-surface py-16" aria-labelledby="pos-titulo">
+  <section class="border-y border-border bg-surface py-16" aria-labelledby="productos-titulo">
     <div class="container-site">
       <div class="flex items-center gap-3" data-reveal>
         <img
@@ -64,20 +63,17 @@ const casos = (await getCasosPublicados()).slice(0, 6);
           class="rounded-lg"
           aria-hidden="true"
         />
-        <h2 id="pos-titulo" class="text-3xl">
-          Punto de venta para talleres de motos
+        <h2 id="productos-titulo" class="text-3xl">
+          Productos
         </h2>
       </div>
       <p class="mt-3 max-w-2xl text-muted" data-reveal>
-        Diseñado específicamente para el flujo de trabajo de talleres mecánicos: control de
-        refacciones, cobranza ágil y diagnóstico asistido por IA.
+        Herramientas digitales desarrolladas por Yolotl Labs para simplificar la operación de tu
+        empresa.
       </p>
-      <div class="mt-8">
-        <ProductPOS compact headingLevel="h3" />
-      </div>
       <p class="mt-6">
-        <a href="/producto-pos/" class="link-arrow">
-          Ver el producto POS
+        <a href="/productos/" class="link-arrow">
+          Ver productos
         </a>
       </p>
     </div>
@@ -122,10 +118,10 @@ const casos = (await getCasosPublicados()).slice(0, 6);
       </p>
       <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
         <a href="/contacto/" class="btn-cta">
-          Pide una demo
+          Contáctanos
         </a>
-        <a href="/producto-pos/" class="btn-secondary">
-          Conoce el POS
+        <a href="/productos/" class="btn-secondary">
+          Ver productos
         </a>
       </div>
     </div>

@@ -1,29 +1,62 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { PAGES } from '@/lib/seo';
+import { SITE } from '@/lib/site';
+
+const UPDATED = '4 de noviembre de 2026';
 ---
 
 <BaseLayout page="terminos">
   <article class="container-site max-w-3xl py-16">
     <h1 class="text-4xl">{PAGES.terminos.title}</h1>
-    <p class="todo mt-4">TODO: texto de marcador pendiente de revisión legal.</p>
+    <p class="mt-4 text-muted">Última actualización: {UPDATED}.</p>
 
     <div class="mt-8 space-y-8">
       <section>
         <h2 class="text-2xl">Uso del sitio</h2>
-        <p class="mt-2 text-muted">TODO: condiciones de uso del sitio web.</p>
+        <p class="mt-2 text-muted">
+          Este sitio ofrece información general sobre {SITE.name} y sus servicios. Al usarlo te
+          comprometes a hacerlo de forma lícita y a no intentar dañar su funcionamiento, acceder sin
+          autorización a sus sistemas ni enviar contenido falso o malicioso a través del formulario
+          de contacto.
+        </p>
       </section>
+
       <section>
         <h2 class="text-2xl">Propiedad intelectual</h2>
-        <p class="mt-2 text-muted">TODO: titularidad de la marca, el logotipo y los contenidos.</p>
+        <p class="mt-2 text-muted">
+          La marca {SITE.name}, el logotipo, el diseño y los contenidos de este sitio pertenecen a
+          {SITE.name}. No está permitido copiarlos, modificarlos o usarlos con fines comerciales sin
+          autorización previa por escrito.
+        </p>
       </section>
+
+      <section>
+        <h2 class="text-2xl">Información y cotizaciones</h2>
+        <p class="mt-2 text-muted">
+          La información del sitio es de carácter informativo y puede cambiar sin previo aviso. Los
+          alcances, plazos y precios de cada proyecto se definen en una propuesta o contrato por
+          escrito.
+        </p>
+      </section>
+
       <section>
         <h2 class="text-2xl">Limitación de responsabilidad</h2>
-        <p class="mt-2 text-muted">TODO.</p>
+        <p class="mt-2 text-muted">
+          Procuramos que el sitio esté disponible y que su información sea correcta, pero no
+          garantizamos que esté libre de interrupciones o errores. {SITE.name} no se hace
+          responsable por daños derivados del uso del sitio ni del contenido de sitios de terceros
+          enlazados desde él.
+        </p>
       </section>
+
       <section>
         <h2 class="text-2xl">Legislación aplicable</h2>
-        <p class="mt-2 text-muted">TODO: leyes y tribunales aplicables en México.</p>
+        <p class="mt-2 text-muted">
+          Estos términos se rigen por las leyes de los Estados Unidos Mexicanos. Para cualquier
+          controversia, las partes se someten a los tribunales competentes de la ciudad de Puebla,
+          Puebla. Si tienes dudas, escríbenos a <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+        </p>
       </section>
     </div>
   </article>

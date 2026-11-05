@@ -8,33 +8,31 @@ export interface PageSeo {
 /** Título y meta description únicos por página. */
 export const PAGES = {
   inicio: {
-    title: 'Software a la medida para negocios locales',
+    title: 'Soluciones a la medida para tu negocio',
     description:
-      'Yolotl Labs desarrolla software a la medida y puntos de venta para negocios locales en Puebla y todo México.',
+      'Yolotl Labs crea soluciones tecnológicas a la medida para impulsar el crecimiento de tu empresa.',
   },
   servicios: {
-    title: 'Servicios de desarrollo de software',
+    title: 'Servicios',
     description:
-      'Desarrollo web, aplicaciones a la medida y automatización para pequeñas y medianas empresas.',
+      'Sitios y aplicaciones web, soluciones a la medida y herramientas inteligentes: sistemas robustos y completamente funcionales.',
   },
-  productoPos: {
-    title: 'Punto de venta para talleres de motos',
-    description:
-      'POS para talleres de motos con punto de venta, control de inventario y un asistente con IA.',
+  productos: {
+    title: 'Productos',
+    description: 'Productos digitales de Yolotl Labs para la operación de tu empresa.',
   },
   casos: {
     title: 'Casos de estudio',
-    description:
-      'Proyectos de Yolotl Labs con negocios locales: el reto, la solución y los resultados.',
+    description: 'Proyectos de Yolotl Labs: el reto, la solución y los resultados.',
   },
   nosotros: {
     title: 'Nosotros',
-    description: 'Conoce al equipo de Yolotl Labs, un estudio de software en Puebla, México.',
+    description:
+      'Yolotl Labs es un estudio de ingeniería en Puebla, México, que resuelve problemas con soluciones de calidad y completamente funcionales.',
   },
   contacto: {
-    title: 'Contacto y demo',
-    description:
-      'Escríbenos para pedir una demo o cotizar tu proyecto de software con Yolotl Labs.',
+    title: 'Contacto',
+    description: 'Escríbenos para cotizar tu proyecto con Yolotl Labs.',
   },
   privacidad: {
     title: 'Aviso de privacidad',

@@ -6,28 +6,23 @@ export const TODO = 'TODO';
 
 export const SITE = {
   name: 'Yolotl Labs',
-  // TODO: confirmar dominio definitivo. Es la única fuente: astro.config.mjs y /robots.txt lo leen.
+  // Dominio oficial. Es la única fuente: astro.config.mjs y /robots.txt lo leen.
   domain: 'yolotlabs.com',
   url: 'https://yolotlabs.com',
   locale: 'es_MX',
   lang: 'es-MX',
   city: 'Puebla, Puebla, México',
-  email: TODO,
+  // Temporal mientras se configura el buzón definitivo: aquí llegan los mensajes del formulario.
+  email: 'cambiar@yolotlabs.com',
   // Número en formato internacional sin signos, p. ej. 5212221234567.
-  whatsapp: TODO,
-  whatsappMessage: 'Hola, Yolotl Labs. Me gustaría pedir una demo.',
-  social: {
-    facebook: TODO,
-    instagram: TODO,
-    linkedin: TODO,
-    github: TODO,
-  },
+  whatsapp: '+52 998 616 0777',
+  whatsappMessage: 'Hola, Yolotl Labs. Me gustaría recibir más información.',
 } as const;
 
 export const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
   { href: '/servicios/', label: 'Servicios' },
-  { href: '/producto-pos/', label: 'Producto POS' },
+  { href: '/productos/', label: 'Productos' },
   { href: '/casos/', label: 'Casos' },
   { href: '/nosotros/', label: 'Nosotros' },
   { href: '/contacto/', label: 'Contacto' },

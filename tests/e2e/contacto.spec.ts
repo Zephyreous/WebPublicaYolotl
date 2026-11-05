@@ -31,7 +31,7 @@ test.describe('carrusel de casos', () => {
     await expect(page.locator('[data-carousel]')).toHaveCount(0);
     await expect(page.locator('[data-controls]')).toHaveCount(0);
 
-    await page.getByRole('link', { name: 'Pide una demo' }).first().click();
+    await page.getByRole('link', { name: 'Contáctanos' }).first().click();
     await page.waitForURL('**/contacto/');
 
     await page.goto('/');
