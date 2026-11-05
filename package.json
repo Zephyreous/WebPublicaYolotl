@@ -17,6 +17,7 @@
     "test": "vitest run",
     "test:contrast": "vitest run tests/contrast.test.ts",
     "test:e2e": "playwright test",
+    "check:content": "node scripts/check-content.mjs",
     "verify:csp": "node scripts/verify-csp.mjs"
   },
   "dependencies": {

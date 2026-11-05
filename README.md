@@ -19,12 +19,18 @@ npm test               # pruebas de contraste y reglas de marca (Vitest)
 npm run check          # verificación de tipos (astro check)
 npm run lint           # ESLint (incluye reglas de accesibilidad jsx-a11y)
 npm run format         # Prettier
-npm run test:e2e       # Playwright (pendiente de configurar, ver tests/example.spec.ts)
+npm run test:e2e       # Playwright: escritorio y móvil (necesita `npx playwright install chromium`)
+npm run check:content  # cuenta los TODO que quedan en dist/ (informativo)
 npm run verify:csp     # comprueba que la CSP de vercel.json cubra dist/ (después de build)
 ```
 
-La CI (`.github/workflows/ci.yml`) ejecuta auditoría de dependencias, formato, lint, tipos, pruebas, build
-y verificación de la CSP en cada push y pull request.
+La CI (`.github/workflows/ci.yml`) ejecuta auditoría de dependencias, formato, lint, tipos, pruebas,
+build, verificación de la CSP, conteo de marcadores y pruebas E2E en cada push a `main` y en cada
+pull request.
+
+**Antes del lanzamiento:** ejecuta `CONTENT_STRICT=1 npm run check:content` después del build. Hoy el
+paso de CI es solo informativo (código 0); con `CONTENT_STRICT=1` falla si queda cualquier marcador
+`TODO` en el sitio compilado, así que sirve de semáforo antes de publicar.
 
 El build descarga las fuentes de Google una vez (necesita red) y las sirve desde el propio sitio.
 

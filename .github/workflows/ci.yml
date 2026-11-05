@@ -34,5 +34,7 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+      - name: Marcadores de contenido pendiente (informativo)
+        run: npm run check:content
       - name: CSP de vercel.json cubre el build
         run: npm run verify:csp
