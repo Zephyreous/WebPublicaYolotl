@@ -45,9 +45,9 @@ despliegues de Vercel; en local (`npm run dev` o `npm run preview`) no envía da
 src/
   components/   Header, Footer, Hero, ServiceCard, ProductPOS, CaseCard, TeamCard,
                 ContactForm, WhatsAppButton, SEO, Logo
-  layouts/      BaseLayout.astro (head, fuentes, meta tags, tema, analítica, loader, ClientRouter)
+  layouts/      BaseLayout.astro (head, fuentes, meta tags, tema, analítica, ClientRouter)
   pages/        una ruta por archivo
-  scripts/      módulos del navegador: loader, navegación, aparición, botones magnéticos, tema
+  scripts/      módulos del navegador: navegación, aparición, botones magnéticos, tema
   content/      servicios/*.md y casos/*.md (esquemas en src/content.config.ts)
   styles/       global.css: tokens de color, tipografía, espaciado y radios
   lib/          site.ts (datos centralizados), seo.ts (título y descripción por página),
@@ -112,8 +112,9 @@ Todo se desactiva con `prefers-reduced-motion: reduce`. El texto dentro de `.bg-
 
 **Carga y navegación**
 
-- **Loader inicial** (`src/scripts/page-loader.ts`): solo aparece si la página tarda más de ~300ms;
-  se retira con un desvanecido y entonces arranca la entrada del hero. Tope de 3s (4s solo con CSS).
+- **Primera carga sin loader:** no hay pantalla de carga intermedia. El hero se anima desde el primer
+  pintado con CSS y el `<h1>` solo se mueve con `transform` (nunca arranca en `opacity: 0`), así que
+  cuenta como LCP de inmediato y no hay ningún overlay tomando clics.
 - **Transición entre páginas** (`<ClientRouter />`, `src/lib/transitions.ts`): el contenido cae y el
   nuevo cae en su lugar con rebote; el header y el botón de WhatsApp no se mueven. Si la página tarda
   más de 250ms, aparece una barra de progreso arriba. Las páginas se precargan al pasar el cursor.

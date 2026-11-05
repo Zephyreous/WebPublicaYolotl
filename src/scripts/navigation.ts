@@ -22,9 +22,8 @@ export function initNavigation() {
 
   document.addEventListener('astro:before-swap', (event) => {
     const next = event.newDocument.documentElement;
-    // is-client-nav: la página llegó por navegación interna (sin loader ni entrada del hero).
-    next.classList.add('js', 'is-loaded', 'is-client-nav');
+    // is-client-nav: la página llegó por navegación interna (sin entrada del hero).
+    next.classList.add('js', 'is-client-nav');
     next.dataset.theme = html.dataset.theme ?? 'dark';
-    event.newDocument.querySelector('[data-page-loader]')?.remove();
   });
 }

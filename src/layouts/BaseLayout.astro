@@ -6,7 +6,6 @@ import Analytics from '@vercel/analytics/astro';
 import SEO from '@/components/SEO.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
-import Logo from '@/components/Logo.astro';
 import WhatsAppButton from '@/components/WhatsAppButton.astro';
 import { SITE } from '@/lib/site';
 import { getSeo, type PageKey } from '@/lib/seo';
@@ -82,14 +81,6 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     )}
   </head>
   <body class="flex min-h-screen flex-col">
-    <!-- Loader de la primera carga: solo aparece si la página tarda más de ~300ms. -->
-    <div class="page-loader" role="status" aria-label="Cargando" data-page-loader>
-      <div class="page-loader-mark">
-        <Logo variant="isotipo" width={72} withClearspace={false} alt="" />
-      </div>
-      <div class="page-loader-bar" aria-hidden="true"></div>
-    </div>
-
     <!-- Barra superior mientras llega una página por navegación interna. -->
     <div class="nav-progress" aria-hidden="true" transition:persist="nav-progress"></div>
 
@@ -110,16 +101,14 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     <script>
       import { initMagnetic } from '@/scripts/magnetic';
       import { initNavigation } from '@/scripts/navigation';
-      import { initPageLoader } from '@/scripts/page-loader';
       import { initReveal } from '@/scripts/reveal';
 
       // Una sola vez por sesión (los módulos no se vuelven a ejecutar al navegar).
-      initPageLoader();
       initNavigation();
 
       // En cada página: la primera carga y cada navegación con ClientRouter.
       document.addEventListener('astro:page-load', () => {
-        void initReveal();
+        initReveal();
         initMagnetic();
       });
     </script>
