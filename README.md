@@ -4,7 +4,7 @@ Sitio estático de Yolotl Labs hecho con Astro 7, TypeScript estricto y Tailwind
 
 ## Requisitos
 
-- Node.js 22.23.4 o superior (recomendado: 24 LTS)
+- Node.js 22.23.4 o superior (mínimo que exige Astro 7; `.nvmrc` fija 24 LTS)
 - npm
 
 ## Comandos
