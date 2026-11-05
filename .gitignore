@@ -13,6 +13,9 @@ dist/
 # documentos internos (no subir)
 NoSubirGithub/
 
+# ajustes locales del editor
+.vscode/
+
 # pruebas
 test-results/
 playwright-report/
