@@ -26,11 +26,11 @@ export const SITE = {
 
 export const NAV_LINKS = [
   { href: '/', label: 'Inicio' },
-  { href: '/servicios', label: 'Servicios' },
-  { href: '/producto-pos', label: 'Producto POS' },
-  { href: '/casos', label: 'Casos' },
-  { href: '/nosotros', label: 'Nosotros' },
-  { href: '/contacto', label: 'Contacto' },
+  { href: '/servicios/', label: 'Servicios' },
+  { href: '/producto-pos/', label: 'Producto POS' },
+  { href: '/casos/', label: 'Casos' },
+  { href: '/nosotros/', label: 'Nosotros' },
+  { href: '/contacto/', label: 'Contacto' },
 ] as const;
 
 export function isConfigured(value: string): boolean {

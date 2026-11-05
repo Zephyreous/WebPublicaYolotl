@@ -19,8 +19,8 @@ const casos = (await getCollection('casos'))
     badge="Software a la medida & POS con IA para negocios locales"
     title={PAGES.inicio.title}
     subtitle="Creamos software a la medida, sistemas punto de venta y automatizaciones inteligentes para acelerar el crecimiento de pequeñas y medianas empresas."
-    cta={{ href: '/contacto', label: 'Pide una demo' }}
-    secondary={{ href: '/servicios', label: 'Ver servicios' }}
+    cta={{ href: '/contacto/', label: 'Pide una demo' }}
+    secondary={{ href: '/servicios/', label: 'Ver servicios' }}
   >
     <div slot="visual" class="float card overflow-hidden p-0">
       <img
@@ -47,7 +47,7 @@ const casos = (await getCollection('casos'))
       ))}
     </div>
     <p class="mt-6">
-      <a href="/servicios" class="link-arrow">
+      <a href="/servicios/" class="link-arrow">
         Conoce todos los servicios
       </a>
     </p>
@@ -76,7 +76,7 @@ const casos = (await getCollection('casos'))
         <ProductPOS compact headingLevel="h3" />
       </div>
       <p class="mt-6">
-        <a href="/producto-pos" class="link-arrow">
+        <a href="/producto-pos/" class="link-arrow">
           Ver el producto POS
         </a>
       </p>
@@ -94,7 +94,7 @@ const casos = (await getCollection('casos'))
       <CaseCarousel entries={casos} />
     </div>
     <p class="mt-6">
-      <a href="/casos" class="link-arrow">
+      <a href="/casos/" class="link-arrow">
         Ver todos los casos
       </a>
     </p>
@@ -119,10 +119,10 @@ const casos = (await getCollection('casos'))
         Platiquemos sobre tus retos operativos y diseñemos una solución a tu medida.
       </p>
       <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-        <a href="/contacto" class="btn-cta">
+        <a href="/contacto/" class="btn-cta">
           Pide una demo
         </a>
-        <a href="/producto-pos" class="btn-secondary">
+        <a href="/producto-pos/" class="btn-secondary">
           Conoce el POS
         </a>
       </div>

@@ -3,7 +3,7 @@ import { SITE } from '@/lib/site';
 
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
 const site = Astro.site ?? new URL(SITE.url);
-const thanksUrl = new URL('/gracias', site).toString();
+const thanksUrl = new URL('/gracias/', site).toString();
 ---
 
 <form
@@ -107,7 +107,7 @@ const thanksUrl = new URL('/gracias', site).toString();
         class="mt-1 h-5 w-5 shrink-0"
       />
       <label for="privacidad">
-        Acepto el <a href="/privacidad">aviso de privacidad</a>.<span aria-hidden="true">*</span>
+        Acepto el <a href="/privacidad/">aviso de privacidad</a>.<span aria-hidden="true">*</span>
       </label>
     </div>
     <p id="privacidad-error" class="field-error" data-error-for="privacidad" hidden>
@@ -236,7 +236,7 @@ const thanksUrl = new URL('/gracias', site).toString();
           const result: { success?: boolean } = await response.json();
           if (!response.ok || !result.success) throw new Error('Envío rechazado');
           showStatus('success', '¡Gracias! Recibimos tu mensaje.');
-          window.location.assign('/gracias');
+          window.location.assign('/gracias/');
         } catch {
           showStatus(
             'error',

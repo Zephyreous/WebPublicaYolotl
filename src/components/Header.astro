@@ -3,8 +3,10 @@ import Logo from './Logo.astro';
 import { NAV_LINKS } from '@/lib/site';
 
 const current = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isActive = (href: string) =>
-  href === '/' ? current === '/' : current === href || current.startsWith(`${href}/`);
+const isActive = (href: string) => {
+  const path = href.replace(/\/$/, '') || '/';
+  return path === '/' ? current === '/' : current === path || current.startsWith(`${path}/`);
+};
 ---
 
 <!-- transition:animate="none": el header no "se cae" al cambiar de página. -->

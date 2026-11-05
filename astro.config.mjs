@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 // TODO: confirmar dominio definitivo (debe coincidir con SITE.url en src/lib/site.ts).
 export default defineConfig({
   site: 'https://yolotlabs.com',
-  trailingSlash: 'ignore',
+  trailingSlash: 'always',
   integrations: [sitemap()],
   // Con <ClientRouter /> las páginas se precargan al pasar el cursor por un enlace.
   prefetch: {
