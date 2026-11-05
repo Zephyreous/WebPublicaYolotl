@@ -12,7 +12,7 @@ ni sesiones de usuario. Lo que hay que proteger:
 
 | Activo                    | Amenaza principal                     | Control                                                             |
 | ------------------------- | ------------------------------------- | ------------------------------------------------------------------- |
-| Integridad de las páginas | Inyección de scripts (XSS)            | CSP con hashes, sin scripts de terceros salvo Plausible             |
+| Integridad de las páginas | Inyección de scripts (XSS)            | CSP con hashes, sin scripts de terceros                             |
 | Visitantes                | Clickjacking, rastreo por terceros    | `frame-ancestors 'none'`, fuentes alojadas, analítica sin cookies   |
 | Datos del formulario      | Interceptación, spam                  | HTTPS + HSTS, honeypot, Web3Forms restringido al dominio            |
 | Código y despliegue       | Dependencias o acciones comprometidas | `npm audit`, Dependabot, acciones fijadas por SHA, permisos mínimos |
@@ -35,11 +35,11 @@ ni sesiones de usuario. Lo que hay que proteger:
 
 ```
 default-src 'self';
-script-src 'self' 'sha256-…' https://plausible.io;
+script-src 'self' 'sha256-…';
 style-src 'self' 'unsafe-inline';
 img-src 'self' data:;
 font-src 'self';
-connect-src 'self' https://api.web3forms.com https://plausible.io;
+connect-src 'self' https://api.web3forms.com;
 form-action 'self' https://api.web3forms.com;
 frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self';
 upgrade-insecure-requests
@@ -63,8 +63,6 @@ upgrade-insecure-requests
   Google, lo que evita compartir su IP (LFPDPPP) y permite `font-src 'self'`.
 - **Vercel Web Analytics:** sin cookies. El script (`/_vercel/insights/script.js`) y los envíos se
   sirven desde el propio dominio, así que la CSP no necesita hosts adicionales.
-- **Plausible:** analítica sin cookies ni datos personales. Solo se carga si `PUBLIC_PLAUSIBLE_DOMAIN`
-  tiene valor. No admite SRI porque el script se actualiza en el servidor de Plausible.
 - **Web3Forms:** recibe los datos del formulario. La clave `PUBLIC_WEB3FORMS_KEY` es pública por
   diseño (va en el HTML); la protección es restringirla al dominio (ver pendientes).
 

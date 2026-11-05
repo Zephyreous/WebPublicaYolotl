@@ -30,10 +30,9 @@ El build descarga las fuentes de Google una vez (necesita red) y las sirve desde
 
 ## Variables de entorno
 
-| Variable                  | Uso                                                                   |
-| ------------------------- | --------------------------------------------------------------------- |
-| `PUBLIC_WEB3FORMS_KEY`    | Clave de acceso de Web3Forms para el formulario de contacto.          |
-| `PUBLIC_PLAUSIBLE_DOMAIN` | Dominio registrado en Plausible. Si está vacío no se carga el script. |
+| Variable               | Uso                                                          |
+| ---------------------- | ------------------------------------------------------------ |
+| `PUBLIC_WEB3FORMS_KEY` | Clave de acceso de Web3Forms para el formulario de contacto. |
 
 **Vercel Web Analytics** (`<Analytics />` en `BaseLayout.astro`) no necesita variables, pero hay que
 activarlo en el panel del proyecto en Vercel (pestaña _Analytics_). Solo registra visitas en los

@@ -21,7 +21,6 @@ interface Props {
 
 const { page, defaultTheme = 'system', noindex = false } = Astro.props;
 const { title, description } = getSeo(page);
-const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
 ---
 
 <!doctype html>
@@ -71,15 +70,6 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
 
     <!-- Navegación entre páginas con animación (src/lib/transitions.ts). -->
     <ClientRouter />
-
-    {plausibleDomain && (
-      <script
-        is:inline
-        defer
-        data-domain={plausibleDomain}
-        src="https://plausible.io/js/script.js"
-      />
-    )}
   </head>
   <body class="flex min-h-screen flex-col">
     <!-- Sprite de marca en línea: los <Logo> lo referencian con <use> (0 peticiones). -->
