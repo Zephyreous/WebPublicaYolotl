@@ -1,11 +1,11 @@
 ---
-title: Automatización e IA
-summary: 'TODO: descripción corta del servicio de automatización e inteligencia artificial.'
+title: Herramientas inteligentes
+summary: 'Herramientas inteligentes que reducen el trabajo repetitivo y te ayudan a tomar mejores decisiones.'
 order: 3
 features:
-  - 'TODO: característica 1'
-  - 'TODO: característica 2'
-  - 'TODO: característica 3'
+  - 'Automatización de tareas y flujos de trabajo'
+  - 'Inteligencia artificial aplicada donde aporta valor real'
+  - 'Información clara para decidir con datos'
 ---
 
-TODO: descripción completa del servicio de automatización e IA.
+Incorporamos herramientas inteligentes a tus sistemas para que tu equipo dedique su tiempo a lo importante. Cada integración se evalúa por el resultado que genera, no por la tecnología en sí.

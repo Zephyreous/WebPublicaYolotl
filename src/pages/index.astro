@@ -4,30 +4,29 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import ServiceCard from '@/components/ServiceCard.astro';
-import ProductPOS from '@/components/ProductPOS.astro';
 import CaseCarousel from '@/components/CaseCarousel.astro';
+import { getCasosPublicados } from '@/lib/content';
 import { PAGES } from '@/lib/seo';
 
 const servicios = (await getCollection('servicios')).sort((a, b) => a.data.order - b.data.order);
-const casos = (await getCollection('casos'))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 6);
+// Solo casos publicados (draft: false). Si no hay ninguno, la sección no se renderiza.
+const casos = (await getCasosPublicados()).slice(0, 6);
 ---
 
 <BaseLayout page="inicio" defaultTheme="dark">
   <Hero
-    badge="Software a la medida & POS con IA para negocios locales"
+    badge="Tecnología e ingeniería a la medida"
     title={PAGES.inicio.title}
-    subtitle="Creamos software a la medida, sistemas punto de venta y automatizaciones inteligentes para acelerar el crecimiento de pequeñas y medianas empresas."
-    cta={{ href: '/contacto', label: 'Pide una demo' }}
-    secondary={{ href: '/servicios', label: 'Ver servicios' }}
+    subtitle="Creamos soluciones tecnológicas a la medida que impulsan el crecimiento de tu empresa."
+    cta={{ href: '/contacto/', label: 'Contáctanos' }}
+    secondary={{ href: '/servicios/', label: 'Ver servicios' }}
   >
     <div slot="visual" class="float card overflow-hidden p-0">
       <img
         src="/brand/Banner.svg"
         width="1200"
         height="630"
-        alt="Yolotl Labs - Plataforma de software e innovación"
+        alt="Yolotl Labs - Soluciones e innovación"
         class="w-full h-auto block"
         loading="eager"
       />
@@ -47,13 +46,13 @@ const casos = (await getCollection('casos'))
       ))}
     </div>
     <p class="mt-6">
-      <a href="/servicios" class="link-arrow">
+      <a href="/servicios/" class="link-arrow">
         Conoce todos los servicios
       </a>
     </p>
   </section>
 
-  <section class="border-y border-border bg-surface py-16" aria-labelledby="pos-titulo">
+  <section class="border-y border-border bg-surface py-16" aria-labelledby="productos-titulo">
     <div class="container-site">
       <div class="flex items-center gap-3" data-reveal>
         <img
@@ -64,41 +63,40 @@ const casos = (await getCollection('casos'))
           class="rounded-lg"
           aria-hidden="true"
         />
-        <h2 id="pos-titulo" class="text-3xl">
-          Punto de venta para talleres de motos
+        <h2 id="productos-titulo" class="text-3xl">
+          Productos
         </h2>
       </div>
       <p class="mt-3 max-w-2xl text-muted" data-reveal>
-        Diseñado específicamente para el flujo de trabajo de talleres mecánicos: control de
-        refacciones, cobranza ágil y diagnóstico asistido por IA.
+        Herramientas digitales desarrolladas por Yolotl Labs para simplificar la operación de tu
+        empresa.
       </p>
-      <div class="mt-8">
-        <ProductPOS compact headingLevel="h3" />
-      </div>
       <p class="mt-6">
-        <a href="/producto-pos" class="link-arrow">
-          Ver el producto POS
+        <a href="/productos/" class="link-arrow">
+          Ver productos
         </a>
       </p>
     </div>
   </section>
 
-  <section class="container-site py-16" aria-labelledby="casos-titulo">
-    <div class="flex items-center gap-3" data-reveal>
-      <Logo variant="isotipo" width={28} withClearspace={false} alt="" />
-      <h2 id="casos-titulo" class="text-3xl">
-        Casos de estudio
-      </h2>
-    </div>
-    <div class="mt-8" data-reveal>
-      <CaseCarousel entries={casos} />
-    </div>
-    <p class="mt-6">
-      <a href="/casos" class="link-arrow">
-        Ver todos los casos
-      </a>
-    </p>
-  </section>
+  {casos.length > 0 && (
+    <section class="container-site py-16" aria-labelledby="casos-titulo">
+      <div class="flex items-center gap-3" data-reveal>
+        <Logo variant="isotipo" width={28} withClearspace={false} alt="" />
+        <h2 id="casos-titulo" class="text-3xl">
+          Casos de estudio
+        </h2>
+      </div>
+      <div class="mt-8" data-reveal>
+        <CaseCarousel entries={casos} />
+      </div>
+      <p class="mt-6">
+        <a href="/casos/" class="link-arrow">
+          Ver todos los casos
+        </a>
+      </p>
+    </section>
+  )}
 
   <!-- Banda final con el fondo decorado: va sobre --color-bg, no dentro de una tarjeta,
        porque sobre navy-surface el destello bajaría el contraste del texto. -->
@@ -119,11 +117,11 @@ const casos = (await getCollection('casos'))
         Platiquemos sobre tus retos operativos y diseñemos una solución a tu medida.
       </p>
       <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-        <a href="/contacto" class="btn-cta">
-          Pide una demo
+        <a href="/contacto/" class="btn-cta">
+          Contáctanos
         </a>
-        <a href="/producto-pos" class="btn-secondary">
-          Conoce el POS
+        <a href="/productos/" class="btn-secondary">
+          Ver productos
         </a>
       </div>
     </div>

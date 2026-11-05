@@ -1,9 +1,9 @@
 ---
 import Logo from './Logo.astro';
-import { NAV_LINKS, SITE, isConfigured } from '@/lib/site';
+import { NAV_LINKS, SITE, isConfigured, whatsappUrl } from '@/lib/site';
 
 const year = new Date().getFullYear();
-const socials = Object.entries(SITE.social);
+const wa = whatsappUrl();
 ---
 
 <footer class="mt-16 border-t border-border bg-surface pb-24 md:pb-0">
@@ -36,20 +36,15 @@ const socials = Object.entries(SITE.social);
           )}
         </li>
         <li>
-          WhatsApp: {isConfigured(SITE.whatsapp) ? SITE.whatsapp : <span class="todo">TODO</span>}
+          WhatsApp:{' '}
+          {wa ? (
+            <a href={wa} target="_blank" rel="noopener noreferrer">
+              {SITE.whatsapp}
+            </a>
+          ) : (
+            <span class="todo">TODO</span>
+          )}
         </li>
-        {socials.map(([network, url]) => (
-          <li class="capitalize">
-            {network}:{' '}
-            {isConfigured(url) ? (
-              <a href={url} rel="noopener noreferrer">
-                {url}
-              </a>
-            ) : (
-              <span class="todo">TODO</span>
-            )}
-          </li>
-        ))}
       </ul>
     </div>
   </div>
@@ -60,8 +55,8 @@ const socials = Object.entries(SITE.social);
         © {year} {SITE.name}. Todos los derechos reservados.
       </p>
       <p class="flex gap-4">
-        <a href="/privacidad">Aviso de privacidad</a>
-        <a href="/terminos">Términos y condiciones</a>
+        <a href="/privacidad/">Aviso de privacidad</a>
+        <a href="/terminos/">Términos y condiciones</a>
       </p>
     </div>
   </div>

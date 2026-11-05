@@ -1,5 +1,3 @@
-import { pageReady } from './page-loader';
-
 const STAGGER_MS = 90;
 const MAX_DELAY_MS = 360;
 
@@ -8,7 +6,7 @@ const MAX_DELAY_MS = 360;
  * Los hermanos se escalonan solos según su posición, con un tope para que el último no tarde.
  * El CSS solo oculta estos elementos con JS activo y sin prefers-reduced-motion.
  */
-export async function initReveal() {
+export function initReveal() {
   const targets = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
 
   for (const el of targets) {
@@ -20,9 +18,6 @@ export async function initReveal() {
       el.style.setProperty('--reveal-delay', `${Math.min(index * STAGGER_MS, MAX_DELAY_MS)}ms`);
     }
   }
-
-  // En la primera carga se espera a que se retire el loader, para que no se animen tapados.
-  await pageReady;
 
   if (!('IntersectionObserver' in window)) {
     targets.forEach((el) => el.classList.add('is-visible'));

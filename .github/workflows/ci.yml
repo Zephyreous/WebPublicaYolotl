@@ -2,7 +2,13 @@ name: CI
 
 on:
   push:
-  pull_request:
+    branches: [main]
+  pull_request: {}
+
+# Un push nuevo al mismo ref cancela la ejecución anterior, para no gastar minutos de más.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 # Permisos mínimos: el workflow solo necesita leer el repositorio.
 permissions:
@@ -34,5 +40,11 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+      - name: Marcadores de contenido pendiente (informativo)
+        run: npm run check:content
       - name: CSP de vercel.json cubre el build
         run: npm run verify:csp
+      - name: Instalar Chromium para Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Pruebas E2E (escritorio y móvil)
+        run: npm run test:e2e

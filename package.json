@@ -17,6 +17,7 @@
     "test": "vitest run",
     "test:contrast": "vitest run tests/contrast.test.ts",
     "test:e2e": "playwright test",
+    "check:content": "node scripts/check-content.mjs",
     "verify:csp": "node scripts/verify-csp.mjs"
   },
   "dependencies": {
@@ -29,9 +30,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@axe-core/playwright": "^4.14.0",
     "@playwright/test": "^1.64.1",
     "@types/node": "^26.6.5",
-    "@typescript-eslint/parser": "^8.72.0",
     "eslint": "^10.13.0",
     "eslint-plugin-astro": "^3.2.1",
     "eslint-plugin-jsx-a11y-x": "^0.2.0",

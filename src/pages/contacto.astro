@@ -10,15 +10,15 @@ const wa = whatsappUrl();
 
 <BaseLayout page="contacto">
   <div class="container-site grid gap-12 py-16 md:grid-cols-2">
-    <div data-reveal="left">
+    <div>
       <span class="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1.5 text-sm font-semibold">
         <Logo variant="isotipo" width={18} withClearspace={false} alt="" />
         Contacto Directo
       </span>
       <h1 class="mt-4 text-4xl md:text-5xl">{PAGES.contacto.title}</h1>
       <p class="mt-6 text-lg text-muted">
-        ¿Tienes un proyecto en mente o quieres conocer en vivo nuestro sistema de punto de venta?
-        Escríbenos y con gusto agendamos una llamada o demo personalizada.
+        ¿Tienes un proyecto en mente? Escríbenos y con gusto agendamos una llamada para conocer lo
+        que necesitas.
       </p>
       <dl class="mt-8 space-y-4">
         <div>
@@ -60,13 +60,13 @@ const wa = whatsappUrl();
         <div>
           <h2 class="text-base font-bold">Atención personalizada</h2>
           <p class="text-sm text-muted">
-            Ingeniería directa con los creadores del software, sin intermediarios.
+            Trato directo con nuestro equipo de ingeniería, sin intermediarios.
           </p>
         </div>
       </div>
     </div>
 
-    <div id="formulario" data-reveal="right">
+    <div id="formulario">
       <h2 class="sr-only">Formulario de contacto</h2>
       <ContactForm />
     </div>

@@ -2,49 +2,72 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { PAGES } from '@/lib/seo';
 import { SITE } from '@/lib/site';
+
+const UPDATED = '4 de noviembre de 2026';
 ---
 
 <BaseLayout page="privacidad">
   <article class="container-site max-w-3xl py-16">
     <h1 class="text-4xl">{PAGES.privacidad.title}</h1>
-    <p class="todo mt-4">
-      TODO: texto de marcador. Debe redactarlo o revisarlo un profesional legal conforme a la Ley
-      Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).
-    </p>
+    <p class="mt-4 text-muted">Última actualización: {UPDATED}.</p>
 
     <div class="mt-8 space-y-8">
       <section>
         <h2 class="text-2xl">Identidad y domicilio del responsable</h2>
         <p class="mt-2 text-muted">
-          TODO: razón social de {SITE.name}, domicilio en {SITE.city} y datos de contacto.
+          {SITE.name}, con domicilio en {SITE.city}, es responsable del tratamiento de los datos
+          personales que nos proporcionas a través de este sitio, conforme a la Ley Federal de
+          Protección de Datos Personales en Posesión de los Particulares. Para cualquier asunto
+          relacionado con este aviso puedes escribirnos a{' '}
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
         </p>
       </section>
+
       <section>
         <h2 class="text-2xl">Datos personales que recabamos</h2>
         <p class="mt-2 text-muted">
-          TODO: nombre, correo electrónico, teléfono y nombre del negocio, recabados mediante el
-          formulario de contacto.
+          A través del formulario de contacto recabamos tu nombre, tu correo electrónico y el
+          mensaje que nos envías; de forma opcional, tu teléfono o WhatsApp y el nombre de tu
+          negocio. No recabamos datos personales sensibles.
         </p>
       </section>
+
       <section>
         <h2 class="text-2xl">Finalidades del tratamiento</h2>
-        <p class="mt-2 text-muted">TODO: finalidades primarias y secundarias.</p>
+        <p class="mt-2 text-muted">
+          Utilizamos tus datos para responder tu mensaje, darte la información que solicitas,
+          elaborar cotizaciones y dar seguimiento a la relación comercial que, en su caso, se
+          establezca. No usamos tus datos para fines distintos sin tu consentimiento, ni los
+          vendemos o compartimos con fines publicitarios.
+        </p>
       </section>
+
       <section>
         <h2 class="text-2xl">Transferencias y encargados</h2>
         <p class="mt-2 text-muted">
-          TODO: proveedores que tratan datos (Web3Forms para el formulario; Vercel Web Analytics y
-          Plausible para analítica sin cookies).
+          Para operar el sitio nos apoyamos en proveedores que tratan datos por nuestra cuenta: el
+          servicio que entrega los mensajes del formulario a nuestro correo y el servicio de
+          alojamiento y analítica del sitio. La analítica es agregada y no utiliza cookies ni
+          identifica a las personas. No realizamos otras transferencias, salvo las que exija la ley.
         </p>
       </section>
+
       <section>
         <h2 class="text-2xl">Derechos ARCO y revocación del consentimiento</h2>
-        <p class="mt-2 text-muted">TODO: medios y procedimiento para ejercer derechos ARCO.</p>
+        <p class="mt-2 text-muted">
+          Puedes acceder a tus datos, rectificarlos, cancelarlos u oponerte a su tratamiento, así
+          como revocar tu consentimiento, enviando una solicitud a{' '}
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a> con tu nombre, el derecho que deseas
+          ejercer y un medio para responderte. Atenderemos tu solicitud en los plazos que establece
+          la ley.
+        </p>
       </section>
+
       <section>
         <h2 class="text-2xl">Cambios al aviso de privacidad</h2>
         <p class="mt-2 text-muted">
-          TODO: cómo se comunicarán los cambios. Última actualización: TODO.
+          Cualquier cambio a este aviso se publicará en esta misma página, indicando la fecha de la
+          última actualización.
         </p>
       </section>
     </div>

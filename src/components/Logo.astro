@@ -39,30 +39,40 @@ const w = isSquare ? Math.max(width, MIN_ISOTIPO) : width;
 const h = isSquare ? w : Math.round(w * FULL_RATIO);
 const clearspace = withClearspace ? Math.round(h * CLEARSPACE_RATIO) : 0;
 
-// [fondo oscuro, fondo claro]. El isotipo también cambia: el ala izquierda es Blanco Hueso
-// en la versión oscura y se perdería sobre ivory.
-const [srcDark, srcLight] = useIcono
-  ? ['/brand/Icono.svg', '/brand/Icono.svg']
-  : useIsotipo
-    ? ['/brand/isotipo.svg', '/brand/isotipo-light.svg']
-    : variant === 'negativo'
-      ? ['/brand/Log+TextDark.svg', '/brand/Log+TextDark.svg']
-      : variant === 'positivo'
-        ? ['/brand/Log+TextLight.svg', '/brand/Log+TextLight.svg']
-        : ['/brand/Log+TextDark.svg', '/brand/Log+TextLight.svg'];
+// Los colores del sprite son variables CSS por tema (global.css). Las variantes fijas las
+// sobrescriben en línea. El isotipo siempre sigue el tema, como en los SVG oficiales.
+const fixedColors =
+  variant === 'negativo'
+    ? '--logo-wing: var(--yolotl-ivory); --logo-core: var(--yolotl-navy); --logo-eye: var(--yolotl-ivory); --logo-wordmark: var(--yolotl-ivory);'
+    : variant === 'positivo'
+      ? '--logo-wing: var(--yolotl-navy); --logo-core: var(--yolotl-ivory); --logo-eye: var(--yolotl-navy); --logo-wordmark: var(--yolotl-navy);'
+      : '';
+
+const style =
+  [clearspace > 0 ? `padding: ${clearspace}px;` : '', fixedColors].filter(Boolean).join(' ') ||
+  undefined;
+
+// Sprite en línea (src/components/BrandSprite.astro), insertado una vez en BaseLayout.
+const symbolId = useIsotipo ? 'yl-isotipo' : 'yl-logo';
+const viewBox = useIsotipo ? '0 0 200 200' : '0 0 520 180';
 ---
 
-<span
-  class:list={['logo', className]}
-  style={clearspace > 0 ? `padding: ${clearspace}px;` : undefined}
->
-  {srcDark === srcLight ? (
-    <img src={srcDark} width={w} height={h} alt={alt} />
+<span class:list={['logo', className]} style={style}>
+  {useIcono ? (
+    <img src="/brand/Icono.svg" width={w} height={h} alt={alt} />
   ) : (
-    <>
-      <img class="logo-on-dark" src={srcDark} width={w} height={h} alt={alt} />
-      <img class="logo-on-light" src={srcLight} width={w} height={h} alt={alt} />
-    </>
+    <svg
+      viewBox={viewBox}
+      width={w}
+      height={h}
+      role={alt ? 'img' : undefined}
+      aria-label={alt || undefined}
+      aria-hidden={alt ? undefined : 'true'}
+      focusable="false"
+      class="logo-svg"
+    >
+      <use href={`#${symbolId}`}></use>
+    </svg>
   )}
 </span>
 
@@ -80,25 +90,9 @@ const [srcDark, srcLight] = useIcono
     height: auto;
   }
 
-  .logo-on-light {
-    display: none !important;
-  }
-
-  :global(:root[data-theme='light']) .logo-on-light {
-    display: block !important;
-  }
-
-  :global(:root[data-theme='light']) .logo-on-dark {
-    display: none !important;
-  }
-
-  @media (prefers-color-scheme: light) {
-    :global(:root:not([data-theme])) .logo-on-light {
-      display: block !important;
-    }
-
-    :global(:root:not([data-theme])) .logo-on-dark {
-      display: none !important;
-    }
+  /* El sprite conserva el tamaño exacto de los atributos width/height (sin sombras ni filtros). */
+  .logo-svg {
+    display: block;
+    max-width: none;
   }
 </style>
