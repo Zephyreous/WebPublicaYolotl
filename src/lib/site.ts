@@ -6,7 +6,7 @@ export const TODO = 'TODO';
 
 export const SITE = {
   name: 'Yolotl Labs',
-  // TODO: confirmar dominio definitivo (también en astro.config.mjs y public/robots.txt).
+  // TODO: confirmar dominio definitivo. Es la única fuente: astro.config.mjs y /robots.txt lo leen.
   domain: 'yolotlabs.com',
   url: 'https://yolotlabs.com',
   locale: 'es_MX',

@@ -2,10 +2,11 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import { SITE } from './src/lib/site.ts';
 
-// TODO: confirmar dominio definitivo (debe coincidir con SITE.url en src/lib/site.ts).
+// El dominio vive en un solo lugar: SITE.url (src/lib/site.ts). Aquí solo se reutiliza.
 export default defineConfig({
-  site: 'https://yolotlabs.com',
+  site: SITE.url,
   trailingSlash: 'always',
   integrations: [sitemap()],
   // Con <ClientRouter /> las páginas se precargan al pasar el cursor por un enlace.

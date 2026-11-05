@@ -162,8 +162,8 @@ Cabeceras HTTP, CSP, terceros y pendientes manuales: ver [SECURITY.md](SECURITY.
 
 ## Dominio y subdominios
 
-- Dominio principal: `yolotlabs.com` (**TODO: confirmar**). Aparece en `src/lib/site.ts`, `astro.config.mjs` y
-  `public/robots.txt`.
+- Dominio principal: `yolotlabs.com` (**TODO: confirmar**). Vive en un solo lugar, `SITE.url` de
+  `src/lib/site.ts`; de ahí lo toman `astro.config.mjs` (canonical, sitemap y JSON-LD) y `/robots.txt`.
 - Subdominios previstos (no implementados en este repositorio):
   - `app.yolotlabs.com`: aplicación (POS y paneles de clientes)
   - `api.yolotlabs.com`: API pública y privada
