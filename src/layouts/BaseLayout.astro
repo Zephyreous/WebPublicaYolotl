@@ -6,6 +6,7 @@ import Analytics from '@vercel/analytics/astro';
 import SEO from '@/components/SEO.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import BrandSprite from '@/components/BrandSprite.astro';
 import WhatsAppButton from '@/components/WhatsAppButton.astro';
 import { SITE } from '@/lib/site';
 import { getSeo, type PageKey } from '@/lib/seo';
@@ -81,6 +82,9 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN?.trim() ?? '';
     )}
   </head>
   <body class="flex min-h-screen flex-col">
+    <!-- Sprite de marca en línea: los <Logo> lo referencian con <use> (0 peticiones). -->
+    <BrandSprite />
+
     <!-- Barra superior mientras llega una página por navegación interna. -->
     <div class="nav-progress" aria-hidden="true" transition:persist="nav-progress"></div>
 

@@ -94,6 +94,14 @@
   --glow-orange: color-mix(in srgb, var(--yolotl-orange) 8%, transparent);
   --grid-line: color-mix(in srgb, var(--yolotl-slate) 5%, transparent);
   --color-text-on-decor: var(--yolotl-slate-light);
+  /*
+   * Logo del sprite (BrandSprite.astro): los colores que cambian entre las variantes oficiales
+   * son variables por tema, así el logo se recolorea al instante al cambiar de tema.
+   */
+  --logo-wing: var(--yolotl-ivory);
+  --logo-core: var(--yolotl-navy);
+  --logo-eye: var(--yolotl-ivory);
+  --logo-wordmark: var(--yolotl-ivory);
 }
 
 /*
@@ -123,6 +131,10 @@
   --grid-line: color-mix(in srgb, var(--yolotl-slate) 10%, transparent);
   /* Sobre el fondo decorado el slate oscurecido ya no llega a 4.5:1; se usa navy. */
   --color-text-on-decor: var(--yolotl-navy);
+  --logo-wing: var(--yolotl-navy);
+  --logo-core: var(--yolotl-ivory);
+  --logo-eye: var(--yolotl-navy);
+  --logo-wordmark: var(--yolotl-navy);
 }
 
 /* Sin JavaScript (o sin data-theme), se respeta la preferencia del sistema. */
@@ -149,6 +161,10 @@
     --grid-line: color-mix(in srgb, var(--yolotl-slate) 10%, transparent);
     /* Sobre el fondo decorado el slate oscurecido ya no llega a 4.5:1; se usa navy. */
     --color-text-on-decor: var(--yolotl-navy);
+    --logo-wing: var(--yolotl-navy);
+    --logo-core: var(--yolotl-ivory);
+    --logo-eye: var(--yolotl-navy);
+    --logo-wordmark: var(--yolotl-navy);
   }
 }
 

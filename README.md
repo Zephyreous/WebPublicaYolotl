@@ -140,7 +140,7 @@ circular desde el botón (View Transition API, en `Header.astro`). En navegadore
 - Archivos oficiales en `public/brand/`:
   - `isotipo.svg`: Colibrí geométrico (200×200px) para fondos oscuros.
   - `isotipo-light.svg`: Misma pieza para fondos claros (el ala izquierda va en Azul Noche en lugar de Blanco Hueso,
-    como en `Log+TextLight.svg`). `Logo.astro` alterna ambas según el tema.
+    como en `Log+TextLight.svg`).
   - `Icono.svg`: Emblema en fondo Azul Noche (`#0D1F38`, 512×512px con esquinas redondeadas) para app icon y favicon.
   - `Log+TextDark.svg` / `logo-dark.svg`: Isotipo + wordmark YOLOTL para fondos oscuros.
   - `Log+TextLight.svg` / `logo-light.svg`: Isotipo + wordmark YOLOTL para fondos claros.
@@ -151,6 +151,11 @@ circular desde el botón (View Transition API, en `Header.astro`). En navegadore
   `tests/brand-rules.test.ts` impide sombras en el código y verifica que toda ruta `/brand/...` exista con las
   mayúsculas exactas (en Linux `Isotipo.svg` ≠ `isotipo.svg`).
 - Para mostrar el isotipo usa `<Logo variant="isotipo" />` en lugar de un `<img>` directo, así cambia con el tema.
+- **Sprite en línea:** `BrandSprite.astro` inserta una sola vez los símbolos `#yl-isotipo` y `#yl-logo` en
+  `BaseLayout`; `Logo.astro` los pinta con `<use>`. Cada logo cuesta 0 peticiones (antes se descargaban dos
+  `<img>`, una por tema) y el recoloreado al cambiar de tema es instantáneo: los colores que difieren entre las
+  variantes oficiales son variables CSS (`--logo-wing`, `--logo-core`, `--logo-eye`, `--logo-wordmark`).
+  `Icono.svg` sigue como `<img>` porque lleva su propio fondo.
 
 ## Seguridad
 

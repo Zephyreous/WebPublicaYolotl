@@ -1,0 +1,131 @@
+---
+/**
+ * Sprite de marca en línea. Se inserta UNA sola vez por página (en BaseLayout) y Logo.astro
+ * lo referencia con <use href="#yl-isotipo"> / <use href="#yl-logo">.
+ *
+ * Así cada logo cuesta 0 peticiones (antes cada <Logo> emitía dos <img>, uno por tema, y se
+ * descargaban ambos) y el cambio de tema es instantáneo: los colores que cambian entre las
+ * variantes oficiales usan variables CSS por tema (ver global.css):
+ *   --logo-wing      ala secundaria izquierda (ivory en oscuro, navy en claro)
+ *   --logo-core      relleno del nodo central del logo completo
+ *   --logo-eye       ojo del colibrí en el logo completo
+ *   --logo-wordmark  tipografía YOLOTL
+ * El isotipo conserva el nodo navy y el ojo ivory de isotipo.svg / isotipo-light.svg.
+ */
+---
+
+<svg class="brand-sprite" aria-hidden="true" focusable="false">
+  <!-- Colibrí geométrico, 200×200 (public/brand/isotipo.svg e isotipo-light.svg). -->
+  <symbol id="yl-isotipo" viewBox="0 0 200 200" fill="none">
+    <g transform="translate(-12, -2)" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Pecho y cola inferior (Naranja Néctar) -->
+      <path
+        d="M 155 62 C 138 66, 134 95, 125 112 C 115 130, 98 134, 82 134 L 68 164 C 82 158, 92 146, 95 134"
+        fill="#E96E24"
+        stroke="#E96E24"
+        stroke-width="4"
+      ></path>
+      <!-- Pico -->
+      <path d="M 142 62 L 192 58 L 144 70 Z" fill="#E96E24"></path>
+      <!-- Ala secundaria izquierda: cambia con el tema -->
+      <path
+        d="M 96 74 L 38 74 C 46 94, 66 106, 90 108"
+        stroke="var(--logo-wing)"
+        stroke-width="6"
+        fill="none"
+      ></path>
+      <!-- Ala superior -->
+      <path d="M 65 74 L 60 40 L 106 78" stroke="#19A796" stroke-width="6" fill="none"></path>
+      <!-- Cabeza y arco dorsal -->
+      <path
+        d="M 104 75 C 110 52, 132 48, 145 62"
+        stroke="#19A796"
+        stroke-width="6"
+        fill="none"
+      ></path>
+      <!-- Cuerpo hacia la cola -->
+      <path
+        d="M 118 92 C 118 118, 98 134, 82 134 L 52 164 L 90 108"
+        stroke="#19A796"
+        stroke-width="6"
+        fill="none"
+      ></path>
+      <!-- Núcleo central (corazón / nodo) -->
+      <circle cx="98" cy="92" r="18" fill="#0D1F38" stroke="#19A796" stroke-width="6"></circle>
+      <!-- Ojo -->
+      <circle cx="128" cy="63" r="4" fill="#F5F3EE"></circle>
+    </g>
+  </symbol>
+
+  <!-- Isotipo + wordmark, 520×180 (public/brand/Log+TextDark.svg y Log+TextLight.svg). -->
+  <symbol id="yl-logo" viewBox="0 0 520 180" fill="none">
+    <g stroke-linecap="round" stroke-linejoin="round">
+      <!-- Pecho y cola inferior (Naranja Néctar) -->
+      <path
+        d="M 155 62 C 138 66, 134 95, 125 112 C 115 130, 98 134, 82 134 L 68 164 C 82 158, 92 146, 95 134"
+        fill="#E96E24"
+        stroke="#E96E24"
+        stroke-width="4"
+      ></path>
+      <!-- Pico -->
+      <path d="M 142 62 L 192 58 L 144 70 Z" fill="#E96E24"></path>
+      <!-- Ala secundaria izquierda -->
+      <path
+        d="M 96 74 L 38 74 C 46 94, 66 106, 90 108"
+        stroke="var(--logo-wing)"
+        stroke-width="6"
+        fill="none"
+      ></path>
+      <!-- Ala superior -->
+      <path d="M 65 74 L 60 40 L 106 78" stroke="#19A796" stroke-width="6" fill="none"></path>
+      <!-- Cabeza y arco dorsal -->
+      <path
+        d="M 104 75 C 110 52, 132 48, 145 62"
+        stroke="#19A796"
+        stroke-width="6"
+        fill="none"
+      ></path>
+      <!-- Cuerpo hacia la cola -->
+      <path
+        d="M 118 92 C 118 118, 98 134, 82 134 L 52 164 L 90 108"
+        stroke="#19A796"
+        stroke-width="6"
+        fill="none"
+      ></path>
+      <!-- Núcleo central -->
+      <circle
+        cx="98"
+        cy="92"
+        r="18"
+        fill="var(--logo-core)"
+        stroke="#19A796"
+        stroke-width="6"
+      ></circle>
+      <!-- Ojo -->
+      <circle cx="128" cy="63" r="4" fill="var(--logo-eye)"></circle>
+    </g>
+    <!-- Logotipo: tipografía institucional -->
+    <text
+      x="198"
+      y="114"
+      fill="var(--logo-wordmark)"
+      font-family="'Plus Jakarta Sans', 'Montserrat', system-ui, -apple-system, sans-serif"
+      font-size="54"
+      font-weight="800"
+      letter-spacing="0.08em"
+    >
+      YOLOTL
+    </text>
+  </symbol>
+</svg>
+
+<style>
+  /* Se renderiza (para que <use> funcione) pero sin ocupar espacio ni ser accesible. */
+  .brand-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+</style>
